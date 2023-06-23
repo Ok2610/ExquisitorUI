@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-
 interface Props {
     name: string,
-    options: []
+    options: string[]
 }
 const props = defineProps<Props>()
 
@@ -19,9 +18,8 @@ function away() {
     active.value = false;
 }
 
-function selectOption(e: Event) {
-    console.log(e);
-    rname.name = e.target.innerHTML;
+function selectOption(option: string) {
+    rname.name = option;
 }
 </script>
 
@@ -29,7 +27,7 @@ function selectOption(e: Event) {
     <div class="drop">
         <button @click="toggle" v-click-away="away">{{ rname.name }}</button>
         <div class="opts" v-if="active">
-            <div class="dropContent" v-for="opt in options" v-if="active" @click="selectOption">
+            <div class="dropContent" v-for="opt in options" v-if="active" @click="selectOption(opt)">
                 {{ opt }}
             </div> 
         </div>
