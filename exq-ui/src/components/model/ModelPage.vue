@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import type Model from '@/types/model';
 
-interface Props { }
+
+interface Props { 
+    currModel : Model 
+}
 defineProps<Props>()
+
+
 
 function testAction() {
     console.log('testAction');
@@ -11,11 +17,19 @@ function testAction() {
 </script>
 
 <template>
-    <v-tooltip text="This is some helpful text">
-        <v-btn @click="testAction" color="primary" hover-text="This is some helpful text">
-            
+    <v-container class="d-block">
+        <h1>{{ currModel.name }}</h1>
+        <v-btn @click="testAction">
+           TEST
+            <v-tooltip 
+             activator="parent" 
+             location="bottom"
+             open-delay="500"
+             >
+                Test tooltip text
+            </v-tooltip>
         </v-btn>
-    </v-tooltip>
+    </v-container>
 </template>
 
 <style scoped>
