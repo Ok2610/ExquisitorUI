@@ -58,3 +58,79 @@ Parent:
     <strong> {{ parentRef }} </strong>
 </ChildComponent>
 ```
+
+**Stores**
+See stores/counter.ts
+In Setup Stores:
+* ```ref()```s become state properties
+* ```computed()```s become getters
+* ```function()```s become actions
+
+
+# Exquisitor
+
+## Welcome / Start options
+
+### New Session with existing collection(s)
+Start new session
+
+### Open Last Session
+Load the latest saved session for user
+
+### View Previous Sessions/Models
+Opens a new modal with previous [Sessions | Models]
+Options to load session or a model from a session
+Start new session with models from different sessions
+
+### Add Collection
+TBD
+
+## Model Tabs
+The main view for an Exquisitor session is the Model page
+For a new session an untitled Model page is presented
+Additional Models can be added by using the tabs on top of the session page
+Save/Restart Session buttons
+
+## Grid
+The Grid is the main component of the Model page
+It consists of groups of items presented on multiple rows
+The number of rows is determined by the screen size or through user input
+Grid: GridGroups[]
+GridGroup: Name, Items[], UpdateFunction, Color?, Number of Suggestions?
+UpdateFunction is a stored function
+
+### Media Item
+Relevant Metadata Information
+ID
+Video ID
+Media
+Paths?
+
+## Relevance Feedback Overlays
+Overlays relating to the relevance feedback process
+
+### Pos/Neg/History Sets
+Views that allow the user to look through the sets to view items or adjust the model
+
+### Setings
+General options for Exquisitor:
+
+* Number of suggestions
+* Resource usage: [Low (1 CPU), Medium (Half), High (All available)]
+* Modalities
+* Grid Groups to use
+
+### Statistics
+TBD
+
+## Search Overlays
+
+### Filters
+All data related filters
+Option to make this overlay sticky
+
+### Search
+The overlay takes half the screen
+Multiple search can take place using tabs in the overlay
+
+### Submission (Competition only)

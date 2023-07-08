@@ -1,15 +1,6 @@
 <script setup lang="ts">
 import StartMessage from './StartMessage.vue'
 import StartOptions from './StartOptions.vue'
-import { urf } from '@/services/ExquisitorAPI'
-import { ref } from 'vue'
-
-function runURF() {
-    const pos = ref([0, 1, 2])
-    const neg = ref([3, 4, 5])
-    const seen = ref([7, 8, 9])
-    return urf(pos.value, neg.value, seen.value)
-}
 </script>
 
 <template>
