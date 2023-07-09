@@ -6,7 +6,7 @@ import SessionPage from './components/SessionPage.vue';
 <template>
     <!-- <StartPage /> -->
     <Suspense>
-        <SessionPage />
+        <session-page />
         <template #fallback>
             <h1>Failed to call Exquisitor API</h1>
         </template>

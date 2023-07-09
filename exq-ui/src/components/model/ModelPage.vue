@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type Model from '@/types/model';
 import { useModelStore } from '@/stores/model';
-import { computed } from 'vue';
+import EditTextField from '../general/EditTextField.vue';
+import { ref, computed, reactive } from 'vue';
 
 interface Props { 
     modelId : number
@@ -13,21 +14,13 @@ const model = computed(() => modelStore.getModel(props.modelId))
 
 function testAction() {
     console.log('testAction');
+    model.value.name = model.value.name+' hi'
     return 0;
 }
 
 </script>
 
 <template>
-    <v-container>
-        <v-text-field 
-         variant="outlined"
-         append-inner-icon="mdi-square-edit-outline"
-         v-model="model.name"
-         @click:append-inner=""
-         >
-        </v-text-field>
-    </v-container>
     <v-container class="d-block">
         <v-btn @click="testAction">
            TEST

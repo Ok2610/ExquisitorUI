@@ -5,12 +5,12 @@ interface Props {
     id: number,
     title: string,
     name: string,
-    confirm: ((e?: any)=>void),
-    par?: any
 }
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const showDialog = ref(false)
+
+const emit = defineEmits(['submit'])
 
 </script>
 
@@ -41,12 +41,12 @@ const showDialog = ref(false)
              >
                 <v-btn 
                  class="confirm" 
-                 @click="confirm(par); showDialog = false;"
+                 @click="emit('submit'); showDialog=false;"
                  >
                     Yes
                 </v-btn>
                 <v-divider class="no-bg clr-transparent" :thickness="20" vertical />
-                <v-btn class="close" @click="showDialog = false">No</v-btn>
+                <v-btn class="close" @click="showDialog=false">No</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

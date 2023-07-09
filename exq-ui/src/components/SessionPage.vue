@@ -8,6 +8,7 @@ import type Model from '@/types/model';
 import ModelPage from '@/components/model/ModelPage.vue'
 
 import DeleteDialog from '@/components/general/DeleteDialog.vue'
+import SettingsForm from './model/SettingsForm.vue';
 
 // interface Props { }
 // defineProps<Props>()
@@ -17,9 +18,6 @@ if (!exqStatus) {
     console.log('FATAL ERROR: Failed to initialize Exqusitor!')    
 }
 
-// Dialogs
-const closeDeleteDialog = ref(false)
-
 // Model store
 const modelStore = useModelStore()
 const models = computed(() => modelStore.models)
@@ -28,6 +26,10 @@ function deleteModel(model : Model) {
     modelStore.deleteModel(model)
 } 
 
+function changeModelName(newName: string) {
+    modelStore.changeName(activeModel.value, newName)
+}
+
 const activeModel = ref(models.value[0])
 
 // Window size
@@ -35,22 +37,18 @@ const activeModel = ref(models.value[0])
 const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'px' }
 // console.log(winHeight.height, winWidth.width)
 
-// Misc
-// const activeModel = ref(modelStore.models[0].id)
-// function changeModel (mid: number) {
-//     activeModel.value = mid
-// }
-
 </script>
 
 <template>
     <template v-if="exqStatus">
         <v-toolbar 
-         id="panel" 
-         class="bg-amber-darken-3"
+         class="bg-amber-darken-3 panel"
          density="compact"
          >
-            <v-tabs class="mr-2" v-model="activeModel">
+            <v-tabs 
+             class="mr-2" 
+             v-model="activeModel"
+             >
                 <v-tab 
                  v-for="m in models" 
                  :key="m.id" 
@@ -58,12 +56,11 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
                  >
                     {{ m.name }}
                     <v-divider class="no-bg clr-transparent" :thickness="5" vertical /> 
-                    <DeleteDialog
+                    <delete-dialog
                      :id="m.id"
                      :name="m.name"
                      title="Model"
-                     :confirm="deleteModel"
-                     :par="m"
+                     @submit="deleteModel(m)"
                      />
                 </v-tab>
             </v-tabs>
@@ -75,9 +72,21 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
                  @click="addModel" 
                  icon="mdi-plus" />
             </div>
+            <v-spacer></v-spacer>
+            <template
+             v-for="m in models" 
+             >
+                <settings-form v-if="activeModel.id === m.id" :modelId="m.id" />
+            </template>
         </v-toolbar>
 
-        <ModelPage :modelId=activeModel.id />
+        <v-window v-model="activeModel">
+            <template
+             v-for="m in models" 
+             >
+                <model-page v-if="activeModel.id === m.id" :model-id="m.id" />
+            </template>
+        </v-window>
     </template>
     <template v-else>
         <h1>FAILED TO LOAD EXQUISITOR</h1>
@@ -85,7 +94,8 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
 </template>
 
 <style scoped>
-#panel {
+.panel {
     width: v-bind('winWidth.width');
+    max-width: v-bind('winWidth.width');
 }
 </style>
