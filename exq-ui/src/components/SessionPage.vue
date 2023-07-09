@@ -77,7 +77,7 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
             </div>
         </v-toolbar>
 
-        <ModelPage :currModel=activeModel />
+        <ModelPage :modelId=activeModel.id />
     </template>
     <template v-else>
         <h1>FAILED TO LOAD EXQUISITOR</h1>

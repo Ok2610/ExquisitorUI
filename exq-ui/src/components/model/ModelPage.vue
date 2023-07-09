@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type Model from '@/types/model';
-
+import { useModelStore } from '@/stores/model';
+import { computed } from 'vue';
 
 interface Props { 
-    currModel : Model 
+    modelId : number
 }
-defineProps<Props>()
+const props = defineProps<Props>()
 
-
+const modelStore = useModelStore()
+const model = computed(() => modelStore.getModel(props.modelId))
 
 function testAction() {
     console.log('testAction');
@@ -17,8 +19,16 @@ function testAction() {
 </script>
 
 <template>
+    <v-container>
+        <v-text-field 
+         variant="outlined"
+         append-inner-icon="mdi-square-edit-outline"
+         v-model="model.name"
+         @click:append-inner=""
+         >
+        </v-text-field>
+    </v-container>
     <v-container class="d-block">
-        <h1>{{ currModel.name }}</h1>
         <v-btn @click="testAction">
            TEST
             <v-tooltip 

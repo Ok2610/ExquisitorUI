@@ -39,18 +39,14 @@ const showDialog = ref(false)
              class="text-center mb-2"
              style="display:block"
              >
-                <v-form 
-                 @submit="confirm(par); showDialog = false;"
-                >
-                    <v-btn 
-                     class="confirm" 
-                     type="submit"
-                     >
-                        Yes
-                    </v-btn>
-                    <v-divider class="no-bg clr-transparent" :thickness="20" vertical />
-                    <v-btn class="close" @click="showDialog = false">No</v-btn>
-                </v-form>
+                <v-btn 
+                 class="confirm" 
+                 @click="confirm(par); showDialog = false;"
+                 >
+                    Yes
+                </v-btn>
+                <v-divider class="no-bg clr-transparent" :thickness="20" vertical />
+                <v-btn class="close" @click="showDialog = false">No</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

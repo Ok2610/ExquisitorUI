@@ -36,6 +36,10 @@ export const useModelStore = defineStore('model', () => {
         model.id = nModels.value
         models.push(model)
     }
-
-    return { models, addModel, deleteModel, initLoadModels, loadModel}
+    
+    function getModel(id: number) : Model {
+        return models.filter(e => e.id === id)[0]
+    }
+    
+    return { models, addModel, deleteModel, initLoadModels, loadModel, getModel}
 })
