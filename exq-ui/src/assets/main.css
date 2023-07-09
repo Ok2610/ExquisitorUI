@@ -2,7 +2,6 @@
 
 #app {
     max-width: 100%;
-    font-weight: normal;
 }
 
 a,
@@ -27,4 +26,12 @@ a,
     #app {
         display: grid;
     }
+}
+
+.no-bg {
+    background: transparent;
+}
+
+.clr-transparent {
+    color: transparent;
 }

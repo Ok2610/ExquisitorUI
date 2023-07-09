@@ -15,7 +15,7 @@ export interface GridGroup {
 
 export default interface Model {
     id : number,
-    name? : string,
+    name : string,
     positives? : MediaItem[], //TODO: Consider using Item[] here instead
     negatives? : MediaItem[], //TODO: Consider using Item[] here instead
     history? : MediaItem[], //TODO: Consider using Item[] here instead

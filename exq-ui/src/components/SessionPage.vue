@@ -7,6 +7,8 @@ import { useModelStore } from '@/stores/model';
 import type Model from '@/types/model';
 import ModelPage from '@/components/model/ModelPage.vue'
 
+import DeleteDialog from '@/components/general/DeleteDialog.vue'
+
 // interface Props { }
 // defineProps<Props>()
 
@@ -15,13 +17,17 @@ if (!exqStatus) {
     console.log('FATAL ERROR: Failed to initialize Exqusitor!')    
 }
 
+// Dialogs
+const closeDeleteDialog = ref(false)
+
 // Model store
 const modelStore = useModelStore()
 const models = computed(() => modelStore.models)
 const addModel = computed(() => modelStore.addModel)
-function removeModel(model : Model) {
-    modelStore.removeModel(model)
+function deleteModel(model : Model) {
+    modelStore.deleteModel(model)
 } 
+
 const activeModel = ref(models.value[0])
 
 // Window size
@@ -49,17 +55,28 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
                  v-for="m in models" 
                  :key="m.id" 
                  :value="m"
-                 color=""
                  >
                     {{ m.name }}
-                    <v-divider class="mx-1" /> 
-                    <v-btn @click="removeModel(m)" class="v-btn--flat" density="compact" icon="mdi-close" />
+                    <v-divider class="no-bg clr-transparent" :thickness="5" vertical /> 
+                    <DeleteDialog
+                     :id="m.id"
+                     :name="m.name"
+                     title="Model"
+                     :confirm="deleteModel"
+                     :par="m"
+                     />
                 </v-tab>
             </v-tabs>
-            <div>
-                <v-btn color="black" style="background-color: rgb(228, 211, 187);" density="compact" @click="addModel" icon="mdi-plus" />
+            <div class="mr-2">
+                <v-btn 
+                 color="black" 
+                 style="background-color: white;" 
+                 density="compact" 
+                 @click="addModel" 
+                 icon="mdi-plus" />
             </div>
         </v-toolbar>
+
         <ModelPage :currModel=activeModel />
     </template>
     <template v-else>
@@ -70,9 +87,5 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
 <style scoped>
 #panel {
     width: v-bind('winWidth.width');
-}
-.no-bg {
-    background: transparent;
-    border: none;
 }
 </style>

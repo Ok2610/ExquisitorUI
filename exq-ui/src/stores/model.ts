@@ -11,13 +11,12 @@ export const useModelStore = defineStore('model', () => {
         nModels.value++
         const mid = ref(nModels.value)
         const mname = ref('Model ' + mid.value)
-        models.push(reactive({ id: mid.value, name: mname.value}))
+        models.push({ id: mid.value, name: mname.value})
     }
     
-    function removeModel(model: Model) {
-        //BUG: Using model.id leads to index not found error 
-        //TODO: Filter away the model instead of splice
-        let m : Model = models.splice(model.id, 1)[0]
+    function deleteModel(model: Model) {
+        let indx = models.findIndex(e => e.id === model.id && e.name === model.name)
+        let m : Model = models.splice(indx, 1)[0]
         console.log('Removed Model:', m.id)
         console.log(m)
     }
@@ -38,5 +37,5 @@ export const useModelStore = defineStore('model', () => {
         models.push(model)
     }
 
-    return { models, addModel, removeModel, initLoadModels, loadModel}
+    return { models, addModel, deleteModel, initLoadModels, loadModel}
 })
