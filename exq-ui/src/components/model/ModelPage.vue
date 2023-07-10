@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type Model from '@/types/model';
 import { useModelStore } from '@/stores/model';
-import EditTextField from '../general/EditTextField.vue';
+import { useItemStore } from '@/stores/items';
 import { ref, computed, reactive } from 'vue';
 
 interface Props { 
@@ -11,6 +10,8 @@ const props = defineProps<Props>()
 
 const modelStore = useModelStore()
 const model = computed(() => modelStore.getModel(props.modelId))
+
+const itemStore = useItemStore()
 
 function testAction() {
     console.log('testAction');

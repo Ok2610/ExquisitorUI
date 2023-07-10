@@ -8,7 +8,7 @@ export interface ExqSuggestRequest {
     // filters: number[][]
 }
 export interface ExqSuggestResponse {
-    suggestions : number[]
+    suggestions : ExqGetItemResponse[]
 }
 
 export interface ExqGetItemResponse {

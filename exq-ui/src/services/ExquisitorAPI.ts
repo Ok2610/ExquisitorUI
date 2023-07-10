@@ -11,9 +11,9 @@ export const getCollections = async (): Promise<string[]> =>
     await fetch('CALL_TO_API_HERE').then((val) => val.json())
 
 // Get suggestions from the current model
-export const urf = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse> => {
+export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse> => {
     // Example of calling API and then fitting the response JSON into desired type
-    const resp : number[] = await fetch('CALL_TO_API_HERE', {
+    const resp : ExqGetItemResponse[] = await fetch('CALL_TO_API_HERE', {
         method: 'POST',
         body: JSON.stringify(req)
     }).then((val) => val.json())
