@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue';
 
-import { initExquisitor } from '@/services/ExquisitorAPI'
+import { initExquisitor } from '@/services/MockExquisitorAPI'
 import { useModelStore } from '@/stores/model';
 
 import type Model from '@/types/model';
