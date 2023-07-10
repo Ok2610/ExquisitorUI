@@ -5,20 +5,20 @@ import { computed, ref } from 'vue';
 import EditTextField from '../general/EditTextField.vue';
 
 interface Props {
-    modelId: number
+    currentModel: Model
 }
-const compProps = defineProps<Props>()
+const settingsProps = defineProps<Props>()
 
 const modelStore = useModelStore()
-let model : Model = modelStore.getModel(compProps.modelId)
+// let model : Model = modelStore.getModel(settingsProps.modelId)
 
 function changeModelName(newName: string) {
-    modelStore.changeName(model, newName)
+    modelStore.changeName(settingsProps.currentModel, newName)
 }
 
 const dialog = ref(false)
 
-const emit = defineEmits(['submit'])
+// const emit = defineEmits(['submit'])
 
 </script>
 
@@ -35,11 +35,11 @@ const emit = defineEmits(['submit'])
         </template>
         <v-card class="bg-indigo text-center">
             <v-card-title class="mb-2">
-                Settings for {{ model.name }}
+                Settings for {{ currentModel.name }}
             </v-card-title>
             <v-card-actions>
                 <edit-text-field 
-                 :text="model.name"
+                 :text="currentModel.name"
                  label="Name"
                  @change="changeModelName"
                  />

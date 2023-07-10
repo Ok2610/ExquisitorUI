@@ -13,24 +13,30 @@ import SettingsForm from './model/SettingsForm.vue';
 // interface Props { }
 // defineProps<Props>()
 
-const exqStatus = await initExquisitor();
-if (!exqStatus) {
-    console.log('FATAL ERROR: Failed to initialize Exqusitor!')    
-}
+const exqSession = await initExquisitor();
 
 // Model store
 const modelStore = useModelStore()
-const models = computed(() => modelStore.models)
-const addModel = computed(() => modelStore.addModel)
-function deleteModel(model : Model) {
-    modelStore.deleteModel(model)
-} 
 
-function changeModelName(newName: string) {
-    modelStore.changeName(activeModel.value, newName)
+const models = computed(() => modelStore.models)
+if (exqSession.success) {
+    await modelStore.addModel(exqSession.session)
 }
 
 const activeModel = ref(models.value[0])
+
+async function addModel (name?: string) {
+    await modelStore.addModel(exqSession.session, name)
+    activeModel.value = models.value[models.value.length - 1]
+}
+async function deleteModel(model: Model) {
+    if (activeModel.value.id === model.id) {
+        let index = models.value.findIndex(e => e.id === model.id)
+        activeModel.value = models.value[index-1]
+    }
+    await modelStore.deleteModel(exqSession.session, model)
+} 
+
 
 // Window size
 // const winHeight = reactive({ height: window.innerHeight })
@@ -40,7 +46,7 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
 </script>
 
 <template>
-    <template v-if="exqStatus">
+    <template v-if="exqSession.success">
         <v-toolbar 
          class="bg-amber-darken-3 panel"
          density="compact"
@@ -76,7 +82,7 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
             <template
              v-for="m in models" 
              >
-                <settings-form v-if="activeModel.id === m.id" :modelId="m.id" />
+                <settings-form v-if="activeModel.id === m.id" :current-model="m" />
             </template>
         </v-toolbar>
 

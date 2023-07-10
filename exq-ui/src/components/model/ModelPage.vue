@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { useModelStore } from '@/stores/model';
-import { useItemStore } from '@/stores/items';
 import { ref, computed, reactive } from 'vue';
+import Grid from './Grid.vue';
+import { useModelStore } from '@/stores/model';
 
 interface Props { 
     modelId : number
 }
-const props = defineProps<Props>()
+const modelProps = defineProps<Props>()
 
 const modelStore = useModelStore()
-const model = computed(() => modelStore.getModel(props.modelId))
+const model = computed(() => modelStore.getModel(modelProps.modelId))
 
-const itemStore = useItemStore()
 
 function testAction() {
     console.log('testAction');
@@ -22,6 +21,7 @@ function testAction() {
 </script>
 
 <template>
+    <grid :model-id="modelId" />
     <v-container class="d-block">
         <v-btn @click="testAction">
            TEST

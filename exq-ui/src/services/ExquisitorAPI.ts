@@ -1,10 +1,35 @@
-import { type ExqSuggestRequest, type ExqSuggestResponse, type ExqGetItemResponse } from "@/types/exq"
+import type { 
+    ExqSuggestRequest, 
+    ExqSuggestResponse,
+    ExqGetItemResponse, 
+    ExqInitResponse,
+    ExqRemoveModelRequest,
+    ExqInitModelRequest,
+    ExqInitModelResponse
+} from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import type { ILSets } from "@/types/mediaitem"
 
 // Initialize Exquisitor
-export const initExquisitor = async (): Promise<boolean> =>
-    await fetch('CALL_TO_API_HERE').then((val) => val.json())
+// TODO: Specify collection
+export const initExquisitor = async (): Promise<ExqInitResponse> => {
+    return await fetch('CALL_TO_API_HERE').then((val) => val.json())
+}
+
+// Initialize model for user
+export const initModel = async(req: ExqInitModelRequest): Promise<ExqInitModelResponse> => {
+    return await fetch('CALL_TO_API_HERE', {
+        method: 'POST',
+        body: JSON.stringify(req)
+    }).then(val => val.json())
+}
+
+export const removeModel = async(req: ExqRemoveModelRequest) : Promise<boolean> => {
+    return await fetch('CALL_TO_API_HERE', {
+        method: 'POST',
+        body: JSON.stringify(req)
+    }).then(val => val.json())
+}
 
 // Get information for collections 
 export const getCollections = async (): Promise<string[]> =>
@@ -16,7 +41,7 @@ export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse>
     const resp : ExqGetItemResponse[] = await fetch('CALL_TO_API_HERE', {
         method: 'POST',
         body: JSON.stringify(req)
-    }).then((val) => val.json())
+    }).then(val => val.json())
     return { suggestions : resp }
 }
 
@@ -29,7 +54,7 @@ export const getItem = async (exqId: number, modelId: number): Promise<MediaItem
             method: 'POST',
             body: JSON.stringify({ itemId: exqId })
         })
-        .then((val) => val.json())
+        .then(val => val.json())
 
     return { id: resp.id, mediaId: resp.mediaId, currentSets: sets, thumbPath: resp.thumbPath, srcPath: resp.srcPath }
 }

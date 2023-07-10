@@ -1,6 +1,15 @@
-import { type ExqSuggestResponse, type ExqSuggestRequest, type ExqGetItemResponse } from "@/types/exq"
+import type { 
+    ExqSuggestResponse, 
+    ExqSuggestRequest, 
+    ExqGetItemResponse, 
+    ExqInitResponse, 
+    ExqInitModelRequest,
+    ExqRemoveModelRequest,
+    ExqInitModelResponse
+} from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { type ILSets } from "@/types/mediaitem"
+import type { GridGroup } from "@/types/model"
 
 const mockItems : number[] = [0,1,2,3,4,5,6,7,8,9,10,20,50,25,30,95,83,24,13,43,54,23,66,85,73,27,21,32,35,74,98,12,84]
 function getTestImagePaths() : string[] {
@@ -11,10 +20,30 @@ function getTestImagePaths() : string[] {
     }
     return imgs
 }
-const imgPaths : string[]= getTestImagePaths()
+const imgPaths : string[] = getTestImagePaths()
 
 // Initialize Exquisitor
-export const initExquisitor = async (): Promise<boolean> => true
+
+export const initExquisitor = async (): Promise<ExqInitResponse> => { 
+    return {session: 'testSession', success: true}
+} 
+
+export const initModel = async(req: ExqInitModelRequest): Promise<ExqInitModelResponse> => {
+    var groups: GridGroup[] = []
+    for (var i = 0; i < req.groups.length; i++) {
+        groups.push({
+            id: req.groups[i].id,
+            itemsToShow: req.groups[i].itemsToShow,
+            items: mockItems.sort(() => .5 - Math.random()).slice(0, req.groups[i].itemsToShow),
+            name: req.groups[i].name
+        })
+    }
+    return { groups: groups }
+}
+
+export const removeModel = async(req: ExqRemoveModelRequest) : Promise<boolean> => {
+    return true
+}
 
 // Get information for collections 
 // export const getCollections = async (): Promise<string[]> =>
