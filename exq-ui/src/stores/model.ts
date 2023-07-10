@@ -6,7 +6,6 @@ import { initModel, removeModel } from '@/services/MockExquisitorAPI'
 
 export const useModelStore = defineStore('model', () => {
     const nModels = ref(0)
-    const modelName = ref('Model ' + nModels.value)
     const models : Model[] = reactive([])
 
     function defaultSettings() : Settings {
