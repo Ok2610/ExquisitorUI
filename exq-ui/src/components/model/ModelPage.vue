@@ -21,7 +21,9 @@ function testAction() {
 </script>
 
 <template>
-    <grid :model-id="modelId" />
+    <v-container class="d-block">
+        <grid v-for="grp in model.grid" :model-id="modelId" :group="grp" />
+    </v-container>
     <v-container class="d-block">
         <v-btn @click="testAction">
            TEST

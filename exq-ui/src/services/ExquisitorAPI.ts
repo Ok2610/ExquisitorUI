@@ -8,7 +8,7 @@ import type {
     ExqInitModelResponse
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
-import type { ILSets } from "@/types/mediaitem"
+import { MediaType, type ILSets } from "@/types/mediaitem"
 
 // Initialize Exquisitor
 // TODO: Specify collection
@@ -56,5 +56,12 @@ export const getItem = async (exqId: number, modelId: number): Promise<MediaItem
         })
         .then(val => val.json())
 
-    return { id: resp.id, mediaId: resp.mediaId, currentSets: sets, thumbPath: resp.thumbPath, srcPath: resp.srcPath }
+    return { 
+        id: resp.id, 
+        mediaId: resp.mediaId, 
+        currentSets: sets, 
+        mediaType: resp.mediaType, 
+        thumbPath: resp.thumbPath, 
+        srcPath: resp.srcPath 
+    }
 }

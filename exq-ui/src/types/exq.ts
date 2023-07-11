@@ -1,5 +1,6 @@
 // Return types for ExquisitorAPI calls
 
+import type { MediaType } from "./mediaitem"
 import type { GridGroup, GridGroupInfo } from "./model"
 
 export interface ExqInitResponse {
@@ -36,6 +37,7 @@ export interface ExqSuggestResponse {
 export interface ExqGetItemResponse {
     id: number
     mediaId: number
+    mediaType: MediaType
     thumbPath: string
     srcPath: string
 }

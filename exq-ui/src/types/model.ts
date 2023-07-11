@@ -1,3 +1,5 @@
+import type MediaItem from "./mediaitem"
+
 export interface GridGroup {
     id : number,
     itemsToShow: number,

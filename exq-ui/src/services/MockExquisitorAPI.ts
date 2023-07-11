@@ -8,7 +8,7 @@ import type {
     ExqInitModelResponse
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
-import { type ILSets } from "@/types/mediaitem"
+import { MediaType, type ILSets } from "@/types/mediaitem"
 import type { GridGroup } from "@/types/model"
 
 const mockItems : number[] = [0,1,2,3,4,5,6,7,8,9,10,20,50,25,30,95,83,24,13,43,54,23,66,85,73,27,21,32,35,74,98,12,84]
@@ -16,7 +16,7 @@ function getTestImagePaths() : string[] {
     var imgs : string[] = []
     for (var i = 0; i < 100; i++) {
         const imgName = i.toString().padStart(5, '0')
-        imgs.push('/public/test-images/'+imgName+'.jpg')
+        imgs.push('/test-images/'+imgName+'.jpg')
     }
     return imgs
 }
@@ -31,6 +31,19 @@ export const initExquisitor = async (): Promise<ExqInitResponse> => {
 export const initModel = async(req: ExqInitModelRequest): Promise<ExqInitModelResponse> => {
     var groups: GridGroup[] = []
     for (var i = 0; i < req.groups.length; i++) {
+        // var random = mockItems.sort(() => .5 - Math.random()).slice(0, req.groups[i].itemsToShow)
+        // var items : MediaItem[] = []
+        // random.forEach(e => {
+        //     const ilsets = new Map<number,Set<ILSets>>()
+        //     ilsets.set(req.modelId, new Set<ILSets>())
+        //     items.push({
+        //         id: e, 
+        //         mediaId: e, 
+        //         currentSets: ilsets, 
+        //         thumbPath: imgPaths[e], 
+        //         srcPath: imgPaths[e] 
+        //     })
+        // })
         groups.push({
             id: req.groups[i].id,
             itemsToShow: req.groups[i].itemsToShow,
@@ -53,14 +66,26 @@ export const removeModel = async(req: ExqRemoveModelRequest) : Promise<boolean> 
 export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse> => {
     const resp : ExqGetItemResponse[] = []
     for (var i = 0; i < req.n; i++) {
-        resp.push({ id: mockItems[i], mediaId: mockItems[i], thumbPath: imgPaths[mockItems[i]], srcPath: imgPaths[mockItems[i]]}) 
+        resp.push({ 
+            id: mockItems[i], 
+            mediaId: mockItems[i], 
+            mediaType: MediaType.Image,
+            thumbPath: imgPaths[mockItems[i]], 
+            srcPath: imgPaths[mockItems[i]]}) 
     }
-    return await { suggestions : resp }
+    return { suggestions : resp }
 }
 
 
 export const getItem = async (exqId: number, modelId: number): Promise<MediaItem> => {
     const ilsets = new Map<number,Set<ILSets>>()
     ilsets.set(modelId, new Set<ILSets>())
-    return await { id: exqId, mediaId: exqId, currentSets: ilsets, thumbPath: '', srcPath: '' }
+    return {
+        id: exqId, 
+        mediaId: exqId, 
+        currentSets: ilsets, 
+        mediaType: MediaType.Image, 
+        thumbPath: imgPaths[exqId], 
+        srcPath: imgPaths[exqId] 
+    }
 }

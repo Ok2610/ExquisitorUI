@@ -7,14 +7,26 @@ import { reactive } from "vue";
 export const useItemStore = defineStore('item', () => {
     const items : Map<number, MediaItem> = reactive(new Map<number,MediaItem>())
     
-    function getMediaItem(exqId: number, modelId: number) {
+    async function getMediaItem(exqId: number, modelId: number) : Promise<MediaItem> {
         if (items.has(exqId)) {
-            return items.get(exqId)
+            return items.get(exqId)! // '!' Non-null
         } else {
-            return getItem(exqId, modelId)
+            return await getItem(exqId, modelId)
         }
     }
     
+    async function getMediaItems(exqIds: number[], modelId: number) : Promise<MediaItem[]> {
+        var mediaItems : MediaItem[] = []
+        for (var i = 0; i < exqIds.length; i++) {
+            if (items.has(exqIds[i])) {
+                mediaItems.push(items.get(exqIds[i])!)
+            } else {
+                mediaItems.push(await getItem(exqIds[i], modelId))
+            }    
+        }
+        return mediaItems
+    }
+
     function addItemToSet(exqId: number, modelId: number, ilset: ILSets) : boolean {
         return items.get(exqId)?.currentSets.get(modelId)?.add(ilset) == null
     }
@@ -49,5 +61,5 @@ export const useItemStore = defineStore('item', () => {
         items.forEach(item => item.currentSets.delete(modelId))
     }
     
-    return {items, getMediaItem, addItemToSet, addItemsToSet, removeItemFromSet, removeItemsFromSet, removeModelFromItems}
+    return {items, getMediaItem, getMediaItems, addItemToSet, addItemsToSet, removeItemFromSet, removeItemsFromSet, removeModelFromItems}
 })
