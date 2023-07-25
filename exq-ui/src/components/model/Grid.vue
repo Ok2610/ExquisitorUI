@@ -38,6 +38,7 @@ const items = await getItems()
             <item 
              :buttons="buttons" 
              :item="it"
+             :modelId="modelId"
             />
         </v-col>
     </v-row>

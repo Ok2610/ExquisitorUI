@@ -1,13 +1,21 @@
 <script setup lang="ts">
+import { useItemStore } from '@/stores/items';
 import type MediaItem from '@/types/mediaitem';
 import { MediaType, type ItemButtons, ItemButton } from '@/types/mediaitem';
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 interface Props {
     buttons : ItemButtons
     item : MediaItem
+    modelId : number
 }
 defineProps<Props>()
+
+const itemStore = useItemStore()
+const isPos = computed(() => itemStore.isItemInPos)
+const isNeg = computed(() => itemStore.isItemInNeg)
+const isHistory = computed(() => itemStore.isItemInHistory)
+const isSubmitted = computed(() => itemStore.isItemInSubmitted)
 
 const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
 
@@ -36,7 +44,8 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                      v-bind="props"
                      class="ma-1 pos"
                      size="small"
-                     :color="isHovering ? 'green' : 'black'"
+                     :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
+                     :disabled="isPos(item.id, modelId)"
                      icon="mdi-thumb-up-outline" />
                 </template>
              </v-hover>
@@ -46,7 +55,8 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                      v-bind="props"
                      class="ma-1 neg"
                      size="small"
-                     :color="isHovering ? 'red' : 'black'"
+                     :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
+                     :disabled="isNeg(item.id, modelId)"
                      icon="mdi-thumb-down-outline" />
                 </template>
             </v-hover>
@@ -66,7 +76,8 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                      v-bind="props"
                      class="ma-1 sub" 
                      size="small"
-                     :color="isHovering ? 'indigo' : 'black'"
+                     :color="isHovering || isSubmitted(item.id, modelId) ? 'indigo' : 'black'"
+                     :disabled="isSubmitted(item.id, modelId)"
                      icon="mdi-send-variant-outline" />
                 </template>
             </v-hover>

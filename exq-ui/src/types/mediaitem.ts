@@ -1,6 +1,5 @@
 export enum ILSets {
-    Suggestions=0,
-    Positives,
+    Positives=0,
     Negatives,
     History,
     Submitted,

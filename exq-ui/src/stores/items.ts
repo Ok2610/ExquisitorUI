@@ -1,5 +1,5 @@
 import { getItem } from "@/services/MockExquisitorAPI";
-import type { ILSets } from "@/types/mediaitem";
+import { ILSets } from "@/types/mediaitem";
 import type MediaItem from "@/types/mediaitem";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
@@ -61,5 +61,38 @@ export const useItemStore = defineStore('item', () => {
         items.forEach(item => item.currentSets.delete(modelId))
     }
     
-    return {items, getMediaItem, getMediaItems, addItemToSet, addItemsToSet, removeItemFromSet, removeItemsFromSet, removeModelFromItems}
+    function isItemInPos(exqId: number, modelId: number) : boolean {
+        if (items.get(exqId)?.currentSets.get(modelId)?.has(ILSets.Positives)) return true
+        return false
+    }
+
+    function isItemInNeg(exqId: number, modelId: number) : boolean {
+        if (items.get(exqId)?.currentSets.get(modelId)?.has(ILSets.Positives)) return true
+        return false
+    }
+
+    function isItemInSubmitted(exqId: number, modelId: number) : boolean {
+        if (items.get(exqId)?.currentSets.get(modelId)?.has(ILSets.Positives)) return true
+        return false
+    }
+
+    function isItemInHistory(exqId: number, modelId: number) : boolean {
+        if (items.get(exqId)?.currentSets.get(modelId)?.has(ILSets.Positives)) return true
+        return false
+    }
+
+    return {
+        items, 
+        getMediaItem, 
+        getMediaItems, 
+        addItemToSet, 
+        addItemsToSet, 
+        removeItemFromSet, 
+        removeItemsFromSet, 
+        removeModelFromItems,
+        isItemInPos,
+        isItemInNeg,
+        isItemInHistory,
+        isItemInSubmitted
+    }
 })
