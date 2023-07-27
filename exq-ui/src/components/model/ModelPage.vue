@@ -2,6 +2,8 @@
 import { ref, computed, reactive } from 'vue';
 import Grid from './Grid.vue';
 import { useModelStore } from '@/stores/model';
+import LeftDrawer from './LeftDrawer.vue';
+import RightDrawer from './RightDrawer.vue';
 
 interface Props { 
     modelId : number
@@ -21,9 +23,11 @@ function testAction() {
 </script>
 
 <template>
+    <left-drawer :model-id="modelId" />
     <v-container class="d-block">
         <grid v-for="grp in model.grid" :model-id="modelId" :group="grp" />
     </v-container>
+    <right-drawer :model-id="modelId" />
     <v-container class="d-block">
         <v-btn @click="testAction">
            TEST
