@@ -28,6 +28,7 @@ export const useItemStore = defineStore('item', () => {
     }
 
     function addItemToSet(exqId: number, modelId: number, ilset: ILSets) : boolean {
+        console.log('Adding Item:', exqId, 'to set', ilset)
         return items.get(exqId)?.currentSets.get(modelId)?.add(ilset) == null
     }
     
