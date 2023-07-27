@@ -23,7 +23,7 @@ async function getItems () {
 }
 const items = await getItems()
 
-// TODO: Add settings store... Toggle for always update model or only when pressing update
+// TODO: Add to settings... Toggle for always update model or only when pressing update
 
 </script>
 
