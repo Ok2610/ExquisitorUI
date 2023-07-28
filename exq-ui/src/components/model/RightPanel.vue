@@ -14,23 +14,29 @@ const rail = ref(true)
 <template>
     <v-navigation-drawer
      theme="dark"
+     location="right"
      rail
     >
         <v-list>
             <v-list-item
-             prepend-icon="mdi-format-list-bulleted"
-             @click="console.log('clicked filter')"
+             prepend-icon="mdi-thumb-up-outline"
+             @click="console.log('clicked positives')"
             >
             </v-list-item>
-            <v-list-item
-             prepend-icon="mdi-magnify"
-             @click="console.log('clicked search')"
-            >
 
-            </v-list-item>
+            <v-divider :thickness="30" class="border-opacity-0"></v-divider>
+
             <v-list-item
-             prepend-icon="mdi-call-merge"
-             @click="console.log('clicked merge')"
+             prepend-icon="mdi-thumb-down-outline"
+             @click="console.log('clicked negatives')"
+            >
+            </v-list-item>
+
+            <v-divider :thickness="30" class="border-opacity-0"></v-divider>
+
+            <v-list-item
+             prepend-icon="mdi-history"
+             @click="console.log('clicked history')"
             >
 
             </v-list-item>
