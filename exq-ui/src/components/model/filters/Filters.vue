@@ -8,6 +8,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const filterStore = useFilterStore()
+const filters = filterStore.filters
 
 </script>
 

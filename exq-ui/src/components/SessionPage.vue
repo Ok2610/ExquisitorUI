@@ -10,6 +10,7 @@ import ModelPage from '@/components/model/ModelPage.vue'
 import DeleteDialog from '@/components/general/DeleteDialog.vue'
 import SettingsForm from './model/SettingsForm.vue';
 import { onMounted } from 'vue';
+import { useFilterStore } from '@/stores/filters';
 
 // interface Props { }
 // defineProps<Props>()
@@ -42,6 +43,10 @@ async function deleteModel(model: Model) {
 // const winHeight = reactive({ height: window.innerHeight })
 const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'px' }
 // console.log(winHeight.height, winWidth.width)
+
+// Load filters
+const filterStore = useFilterStore()
+filterStore.loadFilters()
 
 </script>
 

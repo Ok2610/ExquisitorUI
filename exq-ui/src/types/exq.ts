@@ -1,5 +1,6 @@
 // Return types for ExquisitorAPI calls
 
+import type { Filter } from "./filters"
 import type { MediaType } from "./mediaitem"
 import type { GridGroup, GridGroupInfo } from "./model"
 
@@ -43,5 +44,5 @@ export interface ExqGetItemResponse {
 }
 
 export interface ExqGetFiltersResponse {
-    
+    filters : Filter[]
 }
