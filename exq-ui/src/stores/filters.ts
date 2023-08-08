@@ -1,6 +1,6 @@
 import { getFilters } from "@/services/MockExquisitorAPI";
 // import { getFilters } from "@/services/ExquisitorAPI";
-import type { Filter } from "@/types/filters";
+import type { Filter } from "@/types/filter";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 

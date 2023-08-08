@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-
+import { ref } from 'vue';
+import filters from '@/components/model/filters/Filters.vue'
 
 interface Props {
     modelId: number
@@ -8,6 +8,9 @@ interface Props {
 defineProps<Props>()
 
 const rail = ref(true)
+
+const filterToggle = ref(false)
+const searchToggle = ref(false)
 
 </script>
 
@@ -40,4 +43,12 @@ const rail = ref(true)
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
+    
+    <v-navigation-drawer 
+     v-if="filterToggle"
+     location="left"
+    >
+        <filters :model-id="modelId" />
+    </v-navigation-drawer>
+
 </template>

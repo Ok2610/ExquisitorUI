@@ -8,8 +8,8 @@ import type {
     ExqInitModelResponse,
 ExqGetFiltersResponse
 } from "@/types/exq"
-import type { Filter } from "@/types/filters"
-import { FilterProperty, FilterType } from "@/types/filters"
+import type { Filter } from "@/types/filter"
+import { FilterProperty, FilterType } from "@/types/filter"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets } from "@/types/mediaitem"
 import type { GridGroup } from "@/types/model"

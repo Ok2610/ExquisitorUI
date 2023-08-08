@@ -1,6 +1,6 @@
 // Return types for ExquisitorAPI calls
 
-import type { Filter } from "./filters"
+import type { Filter } from "./filter"
 import type { MediaType } from "./mediaitem"
 import type { GridGroup, GridGroupInfo } from "./model"
 
