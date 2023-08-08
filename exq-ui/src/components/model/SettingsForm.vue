@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useModelStore } from '@/stores/model';
+import { useModelStore } from '@/stores/models';
 import type Model from '@/types/model';
 import { computed, ref } from 'vue';
 import EditTextField from '../general/EditTextField.vue';

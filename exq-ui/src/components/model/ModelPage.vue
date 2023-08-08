@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
 import Grid from './Grid.vue';
-import { useModelStore } from '@/stores/model';
+import { useModelStore } from '@/stores/models';
 import LeftPanel from './LeftPanel.vue';
 import RightPanel from './RightPanel.vue';
 

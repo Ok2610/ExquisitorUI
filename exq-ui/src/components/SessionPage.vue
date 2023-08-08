@@ -2,7 +2,7 @@
 import { ref, reactive, computed, watch } from 'vue';
 
 import { initExquisitor } from '@/services/MockExquisitorAPI'
-import { useModelStore } from '@/stores/model';
+import { useModelStore } from '@/stores/models';
 
 import type Model from '@/types/model';
 import ModelPage from '@/components/model/ModelPage.vue'
