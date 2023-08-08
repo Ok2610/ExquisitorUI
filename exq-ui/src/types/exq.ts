@@ -41,3 +41,7 @@ export interface ExqGetItemResponse {
     thumbPath: string
     srcPath: string
 }
+
+export interface ExqGetFiltersResponse {
+    
+}

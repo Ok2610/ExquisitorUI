@@ -5,7 +5,8 @@ import type {
     ExqInitResponse,
     ExqRemoveModelRequest,
     ExqInitModelRequest,
-    ExqInitModelResponse
+    ExqInitModelResponse,
+ExqGetFiltersResponse
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets } from "@/types/mediaitem"
@@ -64,4 +65,8 @@ export const getItem = async (exqId: number, modelId: number): Promise<MediaItem
         thumbPath: resp.thumbPath, 
         srcPath: resp.srcPath 
     }
+}
+
+export const getFilters = async (): Promise<ExqGetFiltersResponse> => {
+    return await fetch('CALL_TO_API_HERE').then(val => val.json())
 }
