@@ -2,6 +2,7 @@
 import { useItemStore } from '@/stores/items';
 import type MediaItem from '@/types/mediaitem';
 import { MediaType, type ItemButtons, ItemButton, ILSets } from '@/types/mediaitem';
+import { storeToRefs } from 'pinia';
 import { computed, reactive, ref } from 'vue';
 
 interface Props {
@@ -12,12 +13,13 @@ interface Props {
 defineProps<Props>()
 
 const itemStore = useItemStore()
+const { items } = storeToRefs(useItemStore())
 const isPos = computed(() => itemStore.isItemInPos)
 const isNeg = computed(() => itemStore.isItemInNeg)
 const isHistory = computed(() => itemStore.isItemInHistory)
 const isSubmitted = computed(() => itemStore.isItemInSubmitted)
 
-const addItemToSet = computed(() => itemStore.addItemToSet)
+const { addItemToSet } = itemStore
 
 const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
 
@@ -44,19 +46,19 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Pos)" 
                      v-bind="props"
-                     @click="() => addItemToSet(item.id, modelId, ILSets.Positives)"
+                     @click="addItemToSet(item.id, modelId, ILSets.Positives)"
                      class="ma-1 pos"
                      size="small"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
                      :disabled="isPos(item.id, modelId)"
                      icon="mdi-thumb-up-outline" />
                 </template>
-             </v-hover>
+            </v-hover>
             <v-hover>
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Neg)" 
                      v-bind="props"
-                     @click="() => addItemToSet(item.id, modelId, ILSets.Negatives)"
+                     @click="addItemToSet(item.id, modelId, ILSets.Negatives)"
                      class="ma-1 neg"
                      size="small"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
@@ -68,7 +70,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Ignore)"
                      v-bind="props"
-                     @click="() => addItemToSet(item.id, modelId, ILSets.History)"
+                     @click="addItemToSet(item.id, modelId, ILSets.History)"
                      class="ma-1 ignore" 
                      size="small"
                      :color="isHovering ? 'grey' : 'black'"
@@ -79,7 +81,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Sub)" 
                      v-bind="props"
-                     @click="() => addItemToSet(item.id, modelId, ILSets.Submitted)"
+                     @click="addItemToSet(item.id, modelId, ILSets.Submitted)"
                      class="ma-1 sub" 
                      size="small"
                      :color="isHovering || isSubmitted(item.id, modelId) ? 'indigo' : 'black'"
