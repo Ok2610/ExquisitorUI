@@ -80,7 +80,6 @@ export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse>
     return { suggestions : resp }
 }
 
-
 export const getItem = async (exqId: number, modelId: number): Promise<MediaItem> => {
     const ilsets = new Map<number,Set<ILSets>>()
     ilsets.set(modelId, new Set<ILSets>())
@@ -97,6 +96,7 @@ export const getItem = async (exqId: number, modelId: number): Promise<MediaItem
 
 const mockFilters : Filter[] = [
     {
+        id: 0,
         collectionId: 'mock',
         name: 'Day',
         values: [
@@ -111,6 +111,7 @@ const mockFilters : Filter[] = [
         filter: FilterType.Single,
     },
     {
+        id: 1,
         collectionId: 'mock',
         name: 'Dominant Color',
         values: [
@@ -130,6 +131,7 @@ const mockFilters : Filter[] = [
     },
 
     {
+        id: 2,
         collectionId: 'mock',
         name: 'Month',
         values: [
@@ -149,6 +151,7 @@ const mockFilters : Filter[] = [
         filter: FilterType.Multi,
     },
     {
+        id: 3,
         collectionId: 'mock',
         name: 'Hour',
         values: [],
@@ -156,6 +159,7 @@ const mockFilters : Filter[] = [
         range: [0,24]
     },
     {
+        id: 4,
         collectionId: 'mock',
         name: 'Objects',
         values: [
@@ -169,6 +173,7 @@ const mockFilters : Filter[] = [
         count: [[0,4],[1,3],[2,6],[3,5],[4,2]]
     },
     {
+        id: 5,
         collectionId: 'mock',
         name: 'Objects (Multi)',
         values: [

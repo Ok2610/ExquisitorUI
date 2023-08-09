@@ -9,7 +9,6 @@ import ModelPage from '@/components/model/ModelPage.vue'
 
 import DeleteDialog from '@/components/general/DeleteDialog.vue'
 import SettingsForm from './model/SettingsForm.vue';
-import { onMounted } from 'vue';
 import { useFilterStore } from '@/stores/filters';
 
 // interface Props { }
@@ -21,6 +20,7 @@ const exqSession = await initExquisitor();
 const modelStore = useModelStore()
 
 const models = computed(() => modelStore.models)
+
 if (exqSession.success) {
     await modelStore.addModel(exqSession.session)
 }
@@ -31,6 +31,7 @@ async function addModel (name?: string) {
     await modelStore.addModel(exqSession.session, name)
     activeModel.value = models.value[models.value.length - 1]
 }
+
 async function deleteModel(model: Model) {
     if (activeModel.value.id === model.id) {
         let index = models.value.findIndex(e => e.id === model.id)

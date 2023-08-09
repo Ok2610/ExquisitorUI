@@ -12,7 +12,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const itemStore = useItemStore()
-const getSetItems = itemStore.getSetItems
+const { getSetItems } = itemStore
 
 const posButtonSet = new Set<ItemButton>()
 posButtonSet.add(ItemButton.Neg)
@@ -100,7 +100,7 @@ const histUpdate = computed(() => getHistory())
                 <item 
                  :buttons="posButtons" 
                  :item="it"
-                 :modelId="modelId"
+                 :model-id="modelId"
                 />
             </v-list-item>
         </v-list>
@@ -116,7 +116,7 @@ const histUpdate = computed(() => getHistory())
                 <item 
                  :buttons="negButtons" 
                  :item="it"
-                 :modelId="modelId"
+                 :model-id="modelId"
                 />
             </v-list-item>
         </v-list>
@@ -132,7 +132,7 @@ const histUpdate = computed(() => getHistory())
                 <item 
                  :buttons="histButtons" 
                  :item="it"
-                 :modelId="modelId"
+                 :model-id="modelId"
                 />
             </v-list-item>
         </v-list>
