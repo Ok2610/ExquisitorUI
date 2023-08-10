@@ -128,6 +128,16 @@ TBD
 ### Filters
 All data related filters
 Option to make this overlay sticky
+Filter types:
+* Single: Only 1 value can be set for the filter (v-combobox clearable)
+* Multi: Multiple values can be set for this filter (v-combobox chips multiple clearable)
+* NumberRange: Filter with option of range value such as hours (v-range-slider)
+* NumberMultiRange: Filter with option for adding multiple range values (from m to n and from x to y)
+* LabelRange: Range values are labels (thumb-label)
+* LabelMultiRange: Range values are labels (thumb-label)
+* Count: Only 1 value with a corresponding count can be set
+* MultiCount: Multiple values with different counts can be set
+
 
 ### Search
 The overlay takes half the screen
