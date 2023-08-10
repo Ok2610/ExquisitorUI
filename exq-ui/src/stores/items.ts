@@ -31,27 +31,26 @@ export const useItemStore = defineStore('item', () => {
     async function fetchMediaItems(exqIds: number[], modelId: number) : Promise<MediaItem[]> {
         console.log(items)
         var mediaItems : MediaItem[] = []
-        for (var i = 0; i < exqIds.length; i++) {
+        exqIds.forEach(async (v,_) => {
             if (modelItems.has(modelId)) {
-                modelItems.get(modelId)!.add(i)
+                modelItems.get(modelId)!.add(v)
             } else {
                 modelItems.set(modelId, new Set<number>())
-                modelItems.get(modelId)!.add(i)
-            }
-
-            if (items.has(exqIds[i])) {
-                console.log('Getting ', items.get(exqIds[i]))
-                if (!items.get(exqIds[i])!.currentSets.has(modelId)) {
-                    items.get(exqIds[i])!.currentSets.set(modelId, new Set<ILSets>())
+                modelItems.get(modelId)!.add(v)
+            }           
+            if (items.has(v)) {
+                console.log('Getting ', items.get(v))
+                if (!items.get(v)!.currentSets.has(modelId)) {
+                    items.get(v)!.currentSets.set(modelId, new Set<ILSets>())
                 }
-                mediaItems.push(items.get(exqIds[i])!)
+                mediaItems.push(items.get(v)!)
             } else {
-                const item = await getItem(exqIds[i], modelId)
+                const item = await getItem(v, modelId)
                 console.log('Inserting ', item)
-                items.set(exqIds[i], item)
+                items.set(v, item)
                 mediaItems.push(item)
             }    
-        }
+        })
         return mediaItems
     }
 
@@ -76,13 +75,13 @@ export const useItemStore = defineStore('item', () => {
     }
     
     function addItemsToSet(exqIds: number[], modelId: number, ilset: ILSets) : boolean {
-        for (var i = 0; i < exqIds.length; i++) {
-            var success = items.get(exqIds[i])!.currentSets.get(modelId)!.add(ilset) == null
+        exqIds.forEach((v,_) => {
+            var success = items.get(v)!.currentSets.get(modelId)!.add(ilset) == null
             if (!success) {
-                console.log('Unable to add set to item: ' + exqIds[i])
+                console.log('Unable to add set to item: ' + ilset + ' ' + v)
                 return false
             }
-        }
+        })
         return true
     }
     
@@ -91,13 +90,13 @@ export const useItemStore = defineStore('item', () => {
     }
     
     function removeItemsFromSet(exqIds: number[], modelId: number, ilset: ILSets) : boolean {
-        for (var i = 0; i < exqIds.length; i++) {
-            var success = items.get(exqIds[i])!.currentSets.get(modelId)!.delete(ilset) == null
+        exqIds.forEach((v,_) => {
+            var success = items.get(v)!.currentSets.get(modelId)!.delete(ilset) == null
             if (!success) {
-                console.log('Unable to delete set from item: ' + exqIds[i])
+                console.log('Unable to delete set from item: ' + ilset + ' ' + v)
                 return false
             }
-        }
+        })
         return true
     }
     
