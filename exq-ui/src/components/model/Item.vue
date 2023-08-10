@@ -12,6 +12,8 @@ interface Props {
 }
 defineProps<Props>()
 
+defineEmits(['change'])
+
 const itemStore = useItemStore()
 const { items } = storeToRefs(useItemStore())
 const isPos = computed(() => itemStore.isItemInPos)
@@ -46,7 +48,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Pos)" 
                      v-bind="props"
-                     @click="addItemToSet(item.id, modelId, ILSets.Positives)"
+                     @click="addItemToSet(item.id, modelId, ILSets.Positives); $emit('change')"
                      class="ma-1 pos"
                      size="small"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
@@ -58,7 +60,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Neg)" 
                      v-bind="props"
-                     @click="addItemToSet(item.id, modelId, ILSets.Negatives)"
+                     @click="addItemToSet(item.id, modelId, ILSets.Negatives); $emit('change')"
                      class="ma-1 neg"
                      size="small"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"

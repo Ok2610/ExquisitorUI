@@ -28,6 +28,8 @@ await itemStore.fetchMediaItems(props.group.items,props.modelId).then((items) =>
     gridItems.items = items
 })
 
+defineEmits(['change'])
+
 // TODO: Add to settings... Toggle for always update model or only when pressing update
 
 </script>
@@ -45,6 +47,7 @@ await itemStore.fetchMediaItems(props.group.items,props.modelId).then((items) =>
              :buttons="buttons" 
              :item="it"
              :modelId="modelId"
+             @change="$emit('change')"
             />
         </v-col>
     </v-row>

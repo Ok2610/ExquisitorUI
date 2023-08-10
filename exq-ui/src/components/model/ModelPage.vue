@@ -25,7 +25,11 @@ function updateGrid() {
 <template>
     <left-panel :model-id="modelId" />
     <v-container class="d-block">
-        <grid v-for="grp in model.grid" :model-id="modelId" :group="grp" />
+        <grid v-for="grp in model.grid" 
+         :model-id="modelId" 
+         :group="grp" 
+         @change="update=true"
+        />
         <v-sheet
          class="bottom-panel mb-5"
          :elevation="24"
