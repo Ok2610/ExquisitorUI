@@ -22,7 +22,7 @@ const searchToggle = ref(false)
         <v-list>
             <v-list-item
              prepend-icon="mdi-format-list-bulleted"
-             @click="console.log('clicked filter')"
+             @click="console.log('clicked filter'); filterToggle = !filterToggle;"
             >
             </v-list-item>
 
@@ -47,8 +47,12 @@ const searchToggle = ref(false)
     <v-navigation-drawer 
      v-if="filterToggle"
      location="left"
+     color="indigo-lighten-3"
     >
-        <filters :model-id="modelId" />
+        <filters :model-id="modelId" :color="'indigo-lighten-3'"/>
     </v-navigation-drawer>
-
 </template>
+
+<style scoped>
+
+</style>

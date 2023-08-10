@@ -129,7 +129,6 @@ const mockFilters : Filter[] = [
         filter: FilterType.Single,
         property: FilterProperty.Color
     },
-
     {
         id: 2,
         collectionId: 'mock',
@@ -154,12 +153,20 @@ const mockFilters : Filter[] = [
         id: 3,
         collectionId: 'mock',
         name: 'Hour',
-        values: [],
-        filter: FilterType.Range,
+        values: [[0,0],[1,24]],
+        filter: FilterType.NumberRange,
         range: [0,24]
     },
     {
         id: 4,
+        collectionId: 'mock',
+        name: 'Hour',
+        values: [[0,0],[1,24]],
+        filter: FilterType.NumberMultiRange,
+        range: [0,24]
+    },
+    {
+        id: 5,
         collectionId: 'mock',
         name: 'Objects',
         values: [
@@ -173,7 +180,7 @@ const mockFilters : Filter[] = [
         count: [[0,4],[1,3],[2,6],[3,5],[4,2]]
     },
     {
-        id: 5,
+        id: 6,
         collectionId: 'mock',
         name: 'Objects (Multi)',
         values: [

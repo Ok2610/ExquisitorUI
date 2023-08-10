@@ -135,6 +135,7 @@ Filter types:
 * NumberMultiRange: Filter with option for adding multiple range values (from m to n and from x to y)
 * LabelRange: Range values are labels (thumb-label)
 * LabelMultiRange: Range values are labels (thumb-label)
+    * All ranges could have multi option?
 * Count: Only 1 value with a corresponding count can be set
 * MultiCount: Multiple values with different counts can be set
 
