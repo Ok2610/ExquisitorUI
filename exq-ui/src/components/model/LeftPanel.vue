@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import filters from '@/components/model/filters/Filters.vue'
+import search from '@/components/model/search/Search.vue'
 
 interface Props {
     modelId: number
@@ -50,6 +51,14 @@ const searchToggle = ref(false)
      color="indigo-lighten-3"
     >
         <filters :model-id="modelId" :color="'indigo-lighten-3'"/>
+    </v-navigation-drawer>
+
+    <v-navigation-drawer
+     v-if="searchToggle"
+     location="left"
+     theme="dark"
+    >
+        <search :model-id="modelId" />
     </v-navigation-drawer>
 </template>
 

@@ -59,7 +59,6 @@ const histUpdate = computed(() => getHistory())
 </script>
 
 <template>
-
     <v-navigation-drawer
      theme="dark"
      location="right"
@@ -95,6 +94,7 @@ const histUpdate = computed(() => getHistory())
      location="right"
      color="success"
      >
+        <!-- TODO: Move this part into generic component -->
         <v-list :v-model="posUpdate">
             <v-list-item v-for="it in sets.positives">
                 <item 
