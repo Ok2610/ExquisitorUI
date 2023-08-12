@@ -33,14 +33,13 @@ function updateGrid() {
         <v-sheet
          class="bottom-panel mb-5"
          :elevation="24"
-         theme="dark"
          location="bottom center"
+         :color="update ? 'teal' : 'black'"
          rounded
         >
             <v-btn
              size="x-large"
              variant="plain"
-             :color="update ? 'teal' : 'white'"
              @click="updateGrid"
             >
                 <v-icon>mdi-autorenew</v-icon>

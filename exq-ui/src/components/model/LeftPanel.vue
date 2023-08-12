@@ -31,7 +31,7 @@ const searchToggle = ref(false)
 
             <v-list-item
              prepend-icon="mdi-magnify"
-             @click="console.log('clicked search')"
+             @click="console.log('clicked search'); searchToggle = !searchToggle;"
             >
             </v-list-item>
 

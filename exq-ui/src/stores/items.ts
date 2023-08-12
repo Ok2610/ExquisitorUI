@@ -29,7 +29,6 @@ export const useItemStore = defineStore('item', () => {
     }
     
     async function fetchMediaItems(exqIds: number[], modelId: number) : Promise<MediaItem[]> {
-        console.log(items)
         var mediaItems : MediaItem[] = []
         exqIds.forEach(async (v,_) => {
             if (modelItems.has(modelId)) {
