@@ -2,7 +2,6 @@
 import { useItemStore } from '@/stores/items';
 import type MediaItem from '@/types/mediaitem';
 import { MediaType, type ItemButtons, ItemButton, ILSets } from '@/types/mediaitem';
-import { storeToRefs } from 'pinia';
 import { computed, reactive, ref } from 'vue';
 
 interface Props {
@@ -10,18 +9,34 @@ interface Props {
     item : MediaItem
     modelId : number
 }
-defineProps<Props>()
+const props = defineProps<Props>()
 
 defineEmits(['change'])
 
+
 const itemStore = useItemStore()
-const { items } = storeToRefs(useItemStore())
 const isPos = computed(() => itemStore.isItemInPos)
 const isNeg = computed(() => itemStore.isItemInNeg)
-const isHistory = computed(() => itemStore.isItemInHistory)
+// const isHistory = computed(() => itemStore.isItemInHistory)
 const isSubmitted = computed(() => itemStore.isItemInSubmitted)
 
+const snackbar = ref(false)
+const snackTimeout = ref(4000)
+const snackColor = ref('white')
+const text = ref('')
+function snack(itemId: number, set: string) {
+    snackbar.value = true
+    text.value = 'Item ' + itemId + ' has been added to ' + set
+}
 const { addItemToSet } = itemStore
+function addToSet(itemId: number, ilset: ILSets) {
+    addItemToSet(itemId, props.modelId, ilset)
+    if (ilset == ILSets.Positives) snackColor.value = 'success'
+    if (ilset == ILSets.Negatives) snackColor.value = 'error'
+    if (ilset == ILSets.Submitted) snackColor.value = 'indigo'
+    snack(itemId, ILSets[ilset])
+}
+
 
 const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
 
@@ -48,7 +63,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Pos)" 
                      v-bind="props"
-                     @click="addItemToSet(item.id, modelId, ILSets.Positives); $emit('change')"
+                     @click="addToSet(item.id, ILSets.Positives); $emit('change')"
                      class="ma-1 pos"
                      size="small"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
@@ -60,7 +75,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Neg)" 
                      v-bind="props"
-                     @click="addItemToSet(item.id, modelId, ILSets.Negatives); $emit('change')"
+                     @click="addToSet(item.id, ILSets.Negatives); $emit('change')"
                      class="ma-1 neg"
                      size="small"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
@@ -72,7 +87,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Ignore)"
                      v-bind="props"
-                     @click="addItemToSet(item.id, modelId, ILSets.History)"
+                     @click="addToSet(item.id, ILSets.History)"
                      class="ma-1 ignore" 
                      size="small"
                      :color="isHovering ? 'grey' : 'black'"
@@ -83,7 +98,7 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Sub)" 
                      v-bind="props"
-                     @click="addItemToSet(item.id, modelId, ILSets.Submitted)"
+                     @click="addToSet(item.id, ILSets.Submitted)"
                      class="ma-1 sub" 
                      size="small"
                      :color="isHovering || isSubmitted(item.id, modelId) ? 'indigo' : 'black'"
@@ -92,6 +107,21 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 </template>
             </v-hover>
         </v-img>
+        <v-snackbar
+         v-model="snackbar"
+         :timeout="snackTimeout"
+         location="bottom right"
+         :color="snackColor"
+        >
+            {{ text }}
+            <template v-slot:actions>
+                <v-btn
+                 variant="text"
+                 @click="snackbar=false"
+                 icon="mdi-close"
+                />
+            </template>
+        </v-snackbar>
     </template>
 </template>
 
