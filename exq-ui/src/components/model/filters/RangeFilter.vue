@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
+import { reactive, ref } from 'vue';
 
 interface Props {
     name : string
@@ -8,24 +7,51 @@ interface Props {
 }
 const props = defineProps<Props>()
 
+const ranges = reactive({ values: [{range: props.range},{range: props.range}] })
+
 const emit = defineEmits(['valueUpdate'])
 
 function valueUpdate() {
-    emit('valueUpdate', values.value)
+    emit('valueUpdate', ranges.values)
 }
 
-const values = ref(props.range)
+function addSlider() {
+    ranges.values.push({ range: props.range })
+}
+
+function removeSlider() {
+    ranges.values.pop()
+}
 </script>
 
 <template>
     <v-card color="white">
-        <v-card-title class="text-body-1">
-            {{ name }}
-        </v-card-title>
+        <template v-slot:title>
+            <v-card-title class="text-body-1">
+                {{ name }}
+            </v-card-title>
+        </template>
+        <template v-slot:append>
+            <v-btn
+             variant="plain"
+             density="compact"
+             x-small
+             @click="addSlider"
+             icon="mdi-plus"
+            >
+            </v-btn>
+            <v-btn
+             variant="plain"
+             density="compact"
+             x-small
+             :disabled="ranges.values.length < 2"
+             @click="removeSlider"
+             icon="mdi-close"
+            />
+        </template>
         <v-card-text class="ma-0 pa-0 mb-2">
-            <v-range-slider
-             strict
-             v-model="values"
+            <v-range-slider v-for="r in ranges.values"
+             v-model="r.range"
              step="1"
              :min="range[0]"
              :max="range[1]"
@@ -35,14 +61,16 @@ const values = ref(props.range)
             >
                 <template v-slot:prepend>
                     <v-text-field
-                        :model-value="values[0]"
+                        :model-value="r.range[0]"
+                        single-line
                         hide-details
                         variant="underlined"
                     />
                 </template>
                 <template v-slot:append>
                     <v-text-field
-                        :model-value="values[1]"
+                        :model-value="r.range[1]"
+                        single-line
                         hide-details
                         variant="underlined"
                     />
