@@ -15,6 +15,7 @@ import { MediaType, type ILSets } from "@/types/mediaitem"
 import type { GridGroup } from "@/types/model"
 
 const mockItems : number[] = [0,1,2,3,4,5,6,7,8,9,10,20,50,25,30,95,83,24,13,43,54,23,66,85,73,27,21,32,35,74,98,12,84]
+const mockSearchItems : number[] = [32,55,17,69,82]
 
 function getTestImagePaths() : string[] {
     var imgs : string[] = []
@@ -177,7 +178,7 @@ const mockFilters : Filter[] = [
             [4,'ski'],
         ],
         filter: FilterType.Count,
-        count: [[0,4],[1,3],[2,6],[3,5],[4,2]]
+        count: [[0,4],[1,3],[2,6],[3,5],[2,4]]
     },
     {
         id: 6,
@@ -191,7 +192,7 @@ const mockFilters : Filter[] = [
             [4,'ski'],
         ],
         filter: FilterType.MultiCount,
-        count: [[0,4],[1,3],[2,6],[3,5],[4,2]]
+        count: [[0,4],[1,3],[2,6],[3,5],[2,4]]
     }
 ]
 

@@ -7,7 +7,7 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const ranges = reactive({ values: [{range: props.range},{range: props.range}] })
+const ranges = reactive({ values: [{range: props.range}] })
 
 const emit = defineEmits(['valueUpdate'])
 

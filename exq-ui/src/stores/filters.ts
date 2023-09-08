@@ -9,6 +9,8 @@ export const useFilterStore = defineStore('filter', () => {
     const filtersLoaded = ref(false)
     // modelId, [filterId, values]
     const activeFilters : [number,[number,number[]]][] = reactive([])
+    const filtersChanged = ref(false)
+    const noneActiveFilters : [number, [number,number[]]][] = reactive([])
     
     async function loadFilters() {
         const resp = await getFilters()
@@ -16,5 +18,5 @@ export const useFilterStore = defineStore('filter', () => {
         filtersLoaded.value = true
     }
 
-    return { filters, filtersLoaded, loadFilters }
+    return { activeFilters, filters, filtersLoaded, loadFilters }
 })
