@@ -31,18 +31,31 @@ function updateGrid() {
          @change="update=true"
         />
         <v-sheet
-         class="bottom-panel mb-5"
+         class="bottom-panel mb-5 pa-1"
          :elevation="24"
          location="bottom center"
-         :color="update ? 'teal' : 'black'"
+         color="black"
          rounded
         >
             <v-btn
              size="x-large"
+             class="flexcol"
              variant="plain"
+             :style="{backgroundColor: update ? 'chartreuse' : 'black', color: update? 'black' : ''}"
              @click="updateGrid"
             >
                 <v-icon>mdi-autorenew</v-icon>
+                <span class="text-subtitle-2">UPDATE</span>
+            </v-btn>
+            <v-btn
+             size="x-large"
+             class="flexcol"
+             variant="plain"
+             :style="{backgroundColor: 'black'}"
+             @click="updateGrid"
+            >
+                <v-icon>mdi-refresh</v-icon>
+                <span class="text-subtitle-2">CLEAR</span>
             </v-btn>
         </v-sheet>
     </v-container>
@@ -50,9 +63,12 @@ function updateGrid() {
 </template>
 
 <style scoped>
+.flexcol :deep(.v-btn__content) {
+    flex-direction: column;
+}
 .bottom-panel {
     position: fixed;
-    width: 10%;
+    width: auto;
     text-align: center;
 }
 </style>

@@ -40,7 +40,6 @@ defineEmits(['change'])
     >
         <v-col 
          v-for="it in gridItems.items"
-         class="d-flex child-flex"
          cols="3"
          >
             <item 

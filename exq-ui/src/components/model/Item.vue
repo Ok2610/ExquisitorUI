@@ -37,16 +37,18 @@ function addToSet(itemId: number, ilset: ILSets) {
     snack(itemId, ILSets[ilset])
 }
 
-
-const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
+const itemHW = reactive({ maxHeight: (window.innerHeight * 0.25)+'px', maxWidth: (window.innerWidth * 0.3)+'px' })
 
 </script>
 
 <template>
-    <template v-if="item.mediaType === MediaType.Image">
+    <v-sheet 
+     class="ma-1 mb-3 bg-transparent item-hw">
         <v-img
+         :id="'itemThumb'+item.id"
          :src="item.thumbPath"
-         class="bg-transparent item-height"
+         v-if="item.mediaType === MediaType.Image"
+         class="bg-transparent"
          >
             <template v-slot:placeholder>
                 <v-row 
@@ -59,54 +61,69 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                     />
                 </v-row>
             </template>
+            
+        </v-img>
+        <v-sheet class="text-center bg-transparent">
             <v-hover>
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Pos)" 
                      v-bind="props"
+                     class="rounded-0"
+                     variant="flat"
                      @click="addToSet(item.id, ILSets.Positives); $emit('change')"
-                     class="ma-1 pos"
-                     size="small"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
-                     :disabled="isPos(item.id, modelId)"
-                     icon="mdi-thumb-up-outline" />
+                     :disabled="isPos(item.id, modelId)">
+                        <v-icon>
+                            mdi-thumb-up-outline
+                        </v-icon>
+                    </v-btn>
                 </template>
             </v-hover>
             <v-hover>
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Neg)" 
                      v-bind="props"
+                     class="rounded-0"
+                     variant="flat"
                      @click="addToSet(item.id, ILSets.Negatives); $emit('change')"
-                     class="ma-1 neg"
-                     size="small"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
-                     :disabled="isNeg(item.id, modelId)"
-                     icon="mdi-thumb-down-outline" />
+                     :disabled="isNeg(item.id, modelId)">
+                        <v-icon>
+                            mdi-thumb-down-outline
+                        </v-icon>
+                    </v-btn>
                 </template>
             </v-hover>
             <v-hover>
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Ignore)"
                      v-bind="props"
+                     class="rounded-0"
+                     variant="flat"
                      @click="addToSet(item.id, ILSets.History)"
-                     class="ma-1 ignore" 
-                     size="small"
-                     :color="isHovering ? 'grey' : 'black'"
-                     icon="mdi-eye-remove-outline" />
+                     :color="isHovering ? 'grey' : 'black'">
+                        <v-icon>
+                            mdi-eye-remove-outline                           
+                        </v-icon>
+                    </v-btn>
                 </template>
             </v-hover>
             <v-hover>
                 <template v-slot:default="{ isHovering, props }">
                     <v-btn v-if="buttons.buttons.has(ItemButton.Sub)" 
                      v-bind="props"
+                     class="rounded-0"
+                     variant="flat"
                      @click="addToSet(item.id, ILSets.Submitted)"
-                     class="ma-1 sub" 
-                     size="small"
                      :color="isHovering || isSubmitted(item.id, modelId) ? 'indigo' : 'black'"
-                     :disabled="isSubmitted(item.id, modelId)"
-                     icon="mdi-send-variant-outline" />
+                     :disabled="isSubmitted(item.id, modelId)">
+                        <v-icon>
+                            mdi-send-variant-outline
+                        </v-icon>
+                    </v-btn>
                 </template>
             </v-hover>
-        </v-img>
+        </v-sheet>
         <v-snackbar
          v-model="snackbar"
          :timeout="snackTimeout"
@@ -122,14 +139,17 @@ const itemHeight = reactive({ height: (window.innerHeight * 0.25)+'px' })
                 />
             </template>
         </v-snackbar>
-    </template>
+    </v-sheet>
 </template>
 
 <style scoped>
-.item-height {
-    height: v-bind('itemHeight.height');
+.item-hw {
+    height: v-bind('itemHW.maxHeight');
 }
 
+.border-lightgrey {
+    border: 1px solid lightgrey;
+}
 .pos {
     position: absolute;
     bottom: 0;
