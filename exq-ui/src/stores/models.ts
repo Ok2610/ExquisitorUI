@@ -31,8 +31,9 @@ export const useModelStore = defineStore('model', () => {
             id: mid.value, 
             name: mname.value, 
             settings: settings.value,
-            grid: groups.groups
+            grid: groups.groups,
         })
+        console.log(models)
         nModels.value++
     }
     

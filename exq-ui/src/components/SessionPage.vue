@@ -27,6 +27,7 @@ const modelStore = useModelStore()
 const models = computed(() => modelStore.models)
 
 if (exqSession.success) {
+    console.log('Adding Initial Model')
     await modelStore.addModel(exqSession.session)
 }
 

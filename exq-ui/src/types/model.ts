@@ -29,7 +29,7 @@ export default interface Model {
     id : number,
     name : string,
     settings : Settings, //Settings type, number of suggestions, modalities, etc.
-    grid : GridGroup[], //TODO: Use GridGroup[] instead
+    grid : GridGroup[],
     positives? : number[], //TODO: Consider using Item[] here instead
     negatives? : number[], //TODO: Consider using Item[] here instead
     history? : number[], //TODO: Consider using Item[] here instead

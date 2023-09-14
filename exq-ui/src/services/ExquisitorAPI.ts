@@ -28,7 +28,7 @@ export const initExquisitor = async (): Promise<ExqInitResponse> => {
 // Initialize model for user
 export const initModel = async(req: ExqInitModelRequest): Promise<ExqInitModelResponse> => {
     console.log(req)
-    return await fetch(exqURI+'/initModel', {
+    const resp = await fetch(exqURI+'/initModel', {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -36,6 +36,7 @@ export const initModel = async(req: ExqInitModelRequest): Promise<ExqInitModelRe
         },
         body: JSON.stringify(req)
     }).then(val => val.json())
+    return resp
 }
 
 export const removeModel = async(req: ExqRemoveModelRequest) : Promise<boolean> => {
@@ -72,7 +73,7 @@ export const getItem = async (exqId: number, modelId: number): Promise<MediaItem
     const sets = new Map<number,Set<ILSets>>()
     sets.set(modelId, new Set<ILSets>())
     const resp : ExqGetItemResponse = 
-        await fetch(exqURI+'/getItemInfo', {
+        await fetch(exqURI+'/getItem', {
             method: 'POST',
             mode: 'cors',
             headers: {
