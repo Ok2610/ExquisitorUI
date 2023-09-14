@@ -49,7 +49,7 @@ function clearFilters() {
             <v-combobox
              clearable
              :label="filter.name"
-             :items="filter.values.map((v,_) => v[1])"
+             :items="filter.values.map((v,_) => v)"
              variant="solo-filled"
             />
         </v-sheet>        
@@ -63,7 +63,7 @@ function clearFilters() {
              clearable
              multiple
              :label="filter.name"
-             :items="filter.values.map((v,_) => v[1])"
+             :items="filter.values.map((v,_) => v)"
              variant="solo-filled"
             />
         </v-sheet>        
@@ -74,7 +74,7 @@ function clearFilters() {
            <range-filter
             :name="filter.name"
             :range="filter.range!"
-            @value-update="(values) => { filter.values[0][1] = values[0]; filter.values[1][1] = values[1]; console.log(values) }"
+            @value-update="(values) => { filter.values[0] = values[0]; filter.values[1] = values[1]; console.log(values) }"
            />
         </v-sheet>
         <v-sheet v-if="filter.filter == FilterType.Count"

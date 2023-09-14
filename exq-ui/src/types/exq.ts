@@ -29,10 +29,9 @@ export interface ExqSuggestRequest {
     pos: number[]
     neg: number[]
     seen: number[]
-    // filters: number[][]
 }
 export interface ExqSuggestResponse {
-    suggestions : ExqGetItemResponse[]
+    suggestions : number[]
 }
 
 export interface ExqGetItemResponse {

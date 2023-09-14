@@ -1,8 +1,8 @@
-import { getFilters } from "@/services/MockExquisitorAPI";
-// import { getFilters } from "@/services/ExquisitorAPI";
 import type { Filter } from "@/types/filter";
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
+import { getFilters } from "@/services/ExquisitorAPI";
+// import { getFilters } from "@/services/MockExquisitorAPI";
 
 export const useFilterStore = defineStore('filter', () => {
     const filters : Filter[] = reactive([])

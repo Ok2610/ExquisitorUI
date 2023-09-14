@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue';
 
-import { initExquisitor } from '@/services/MockExquisitorAPI'
+// import { initExquisitor } from '@/services/MockExquisitorAPI'
+import { initExquisitor } from '@/services/ExquisitorAPI'
+import { useSessionStore } from '@/stores/sessions';
 import { useModelStore } from '@/stores/models';
 
 import type Model from '@/types/model';
@@ -15,6 +17,9 @@ import { useFilterStore } from '@/stores/filters';
 // defineProps<Props>()
 
 const exqSession = await initExquisitor();
+console.log(exqSession);
+
+useSessionStore().setSession(exqSession.session)
 
 // Model store
 const modelStore = useModelStore()

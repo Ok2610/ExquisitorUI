@@ -20,7 +20,7 @@ export interface Filter {
     id: number
     collectionId : string
     name: string
-    values : [number,string | number][]
+    values : [string | number][]
     filter : FilterType
     range? : [number,number]
     rangeLabel? : [number,string][] // Only if LabelRange is used
