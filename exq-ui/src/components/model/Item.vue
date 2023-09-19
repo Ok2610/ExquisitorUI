@@ -6,15 +6,40 @@ import { computed, reactive, ref } from 'vue';
 
 interface Props {
     buttons : ItemButtons
-    item : MediaItem
+    itemId : number
+    item?: MediaItem
     modelId : number
+    provided : boolean
 }
 const props = defineProps<Props>()
 
 defineEmits(['change'])
 
-
 const itemStore = useItemStore()
+const item : MediaItem = reactive({id: -1, srcPath:'', thumbPath:''})
+
+async function getMediaItem() {
+    await itemStore.fetchMediaItem(props.itemId, props.modelId)
+    let mi = itemStore.items.get(props.itemId)!
+    item.id = mi.id
+    item.mediaId = mi.mediaId
+    item.currentSets = mi.currentSets
+    item.name = mi.name
+    item.mediaType = mi.mediaType
+    item.srcPath = mi.srcPath
+    item.thumbPath = mi.thumbPath
+}
+if (!props.provided) {
+    await getMediaItem()
+} else {
+    item.id = props.item!.id
+    item.mediaId = props.item!.mediaId
+    item.currentSets = props.item!.currentSets
+    item.name = props.item!.name
+    item.mediaType = props.item!.mediaType
+    item.srcPath = props.item!.thumbPath
+    item.thumbPath = props.item!.thumbPath
+}
 const isPos = computed(() => itemStore.isItemInPos)
 const isNeg = computed(() => itemStore.isItemInNeg)
 // const isHistory = computed(() => itemStore.isItemInHistory)

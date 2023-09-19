@@ -99,8 +99,10 @@ const histUpdate = computed(() => getHistory())
             <v-list-item v-for="it in sets.positives">
                 <item 
                  :buttons="posButtons" 
+                 :item-id="it.id"
                  :item="it"
                  :model-id="modelId"
+                 :provided="true"
                 />
             </v-list-item>
         </v-list>
@@ -115,8 +117,10 @@ const histUpdate = computed(() => getHistory())
             <v-list-item v-for="it in sets.negatives">
                 <item 
                  :buttons="negButtons" 
+                 :item-id="it.id"
                  :item="it"
                  :model-id="modelId"
+                 :provided="true"
                 />
             </v-list-item>
         </v-list>
@@ -131,8 +135,10 @@ const histUpdate = computed(() => getHistory())
             <v-list-item v-for="it in sets.history">
                 <item 
                  :buttons="histButtons" 
+                 :item-id="it.id"
                  :item="it"
                  :model-id="modelId"
+                 :provided="true"
                 />
             </v-list-item>
         </v-list>
