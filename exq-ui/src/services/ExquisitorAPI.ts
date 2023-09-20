@@ -57,7 +57,7 @@ export const getCollections = async (): Promise<string[]> =>
 // Get suggestions from the current model
 export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse> => {
     // Example of calling API and then fitting the response JSON into desired type
-    const resp : number[] = await fetch(exqURI+'/urf', {
+    const resp : ExqSuggestResponse = await fetch(exqURI+'/urf', {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -65,7 +65,7 @@ export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse>
         },
         body: JSON.stringify(req)
     }).then(val => val.json())
-    return { suggestions : resp }
+    return resp
 }
 
 

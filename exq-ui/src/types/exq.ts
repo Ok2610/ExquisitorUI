@@ -25,6 +25,8 @@ export interface ExqRemoveModelRequest {
 }
 
 export interface ExqSuggestRequest {
+    session: string
+    model: number
     n: number
     pos: number[]
     neg: number[]

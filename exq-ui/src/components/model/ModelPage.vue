@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue';
 import Grid from './Grid.vue';
-import { useModelStore } from '@/stores/models';
 import LeftPanel from './LeftPanel.vue';
 import RightPanel from './RightPanel.vue';
+import { ref, computed, reactive } from 'vue';
+import { useModelStore } from '@/stores/models';
+import { useItemStore } from '@/stores/items';
+import { useSessionStore } from '@/stores/sessions';
+import { ILSets } from '@/types/mediaitem';
+import { provide } from 'vue';
 
 interface Props { 
     modelId : number
@@ -12,14 +16,43 @@ const modelProps = defineProps<Props>()
 
 const modelStore = useModelStore()
 const model = computed(() => modelStore.getModel(modelProps.modelId))
+const itemStore = useItemStore()
+const session = useSessionStore().getSession
 
-const update = ref(false)
+const updateButton = ref(false)
 
-function updateGrid() {
-    update.value = false
-    // TODO: CALL ExquisitorAPI to train and get new suggestions
+function replaceItem(id:number, grid:number) {
+    updateButton.value = true
+    // Get items from cache
+    // TODO: Let server have a cache, collect 2 times requested n, 
+    // and whenever we need to replace get from cache
+
+    let n = 1;
+    let pos = itemStore.getSetItems(model.value.id, ILSets.Positives).map((e,_) => e.id)
+    let neg = itemStore.getSetItems(model.value.id, ILSets.Negatives).map((e,_) => e.id)
+    let hist = itemStore.getSetItems(model.value.id, ILSets.History).map((e,_) => e.id)
+    hist.push(...pos)
+    hist.push(...neg)
+    modelStore.getSuggestions({session: session, model: model.value.id, n: n, pos: pos, neg: neg, seen: hist}, grid, id)
 }
 
+function updateGrid() {
+    updateButton.value = false
+    // TODO: Make this getSuggestions for each group
+    // Works since there is only one group
+    let n = model.value.settings.groups[0].itemsToShow;
+    let pos = itemStore.getSetItems(model.value.id, ILSets.Positives).map((e,_) => e.id)
+    let neg = itemStore.getSetItems(model.value.id, ILSets.Negatives).map((e,_) => e.id)
+    let hist = itemStore.getSetItems(model.value.id, ILSets.History).map((e,_) => e.id)
+    hist.push(...model.value.grid[0].items)
+    hist.push(...pos)
+    hist.push(...neg)
+    // TODO: replace hardcoded value
+    modelStore.getSuggestions({session: session, model: model.value.id, n: n, pos: pos, neg: neg, seen: hist}, 0)
+}
+
+const itemHW = reactive({ maxHeight: (window.innerHeight * 0.25)+'px', maxWidth: (window.innerWidth * 0.3)+'px' })
+provide('itemHW', itemHW)
 </script>
 
 <template>
@@ -28,7 +61,8 @@ function updateGrid() {
         <grid v-for="grp in model.grid" 
          :model-id="modelId" 
          :group="grp" 
-         @change="update=true"
+         :group-index="model.grid.indexOf(grp)"
+         @change="replaceItem"
         />
         <v-sheet
          class="bottom-panel mb-5 pa-1"
@@ -41,7 +75,7 @@ function updateGrid() {
              size="x-large"
              class="flexcol"
              variant="plain"
-             :style="{backgroundColor: update ? 'chartreuse' : 'black', color: update? 'black' : ''}"
+             :style="{backgroundColor: updateButton ? 'chartreuse' : 'black', color: updateButton ? 'black' : ''}"
              @click="updateGrid"
             >
                 <v-icon>mdi-autorenew</v-icon>

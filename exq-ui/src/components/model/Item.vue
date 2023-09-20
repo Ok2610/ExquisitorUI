@@ -2,6 +2,7 @@
 import { useItemStore } from '@/stores/items';
 import type MediaItem from '@/types/mediaitem';
 import { MediaType, type ItemButtons, ItemButton, ILSets } from '@/types/mediaitem';
+import { inject } from 'vue';
 import { computed, reactive, ref } from 'vue';
 
 interface Props {
@@ -13,11 +14,14 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-defineEmits(['change'])
+defineEmits<{
+    (event: 'change', id:number): void
+}>()
+
+const itemHW = inject('itemHW')
 
 const itemStore = useItemStore()
 const item : MediaItem = reactive({id: -1, srcPath:'', thumbPath:''})
-
 async function getMediaItem() {
     await itemStore.fetchMediaItem(props.itemId, props.modelId)
     let mi = itemStore.items.get(props.itemId)!
@@ -40,6 +44,7 @@ if (!props.provided) {
     item.srcPath = props.item!.thumbPath
     item.thumbPath = props.item!.thumbPath
 }
+
 const isPos = computed(() => itemStore.isItemInPos)
 const isNeg = computed(() => itemStore.isItemInNeg)
 // const isHistory = computed(() => itemStore.isItemInHistory)
@@ -62,32 +67,50 @@ function addToSet(itemId: number, ilset: ILSets) {
     snack(itemId, ILSets[ilset])
 }
 
-const itemHW = reactive({ maxHeight: (window.innerHeight * 0.25)+'px', maxWidth: (window.innerWidth * 0.3)+'px' })
 
 </script>
 
 <template>
     <v-sheet 
-     class="ma-1 mb-3 bg-transparent item-hw">
-        <v-img
-         :id="'itemThumb'+item.id"
-         :src="item.thumbPath"
-         v-if="item.mediaType === MediaType.Image"
-         class="bg-transparent"
-         >
-            <template v-slot:placeholder>
-                <v-row 
-                 class="fill-height ma-0"
-                 justify="center"
-                >
-                    <v-progress-circular 
-                     indeterminate
-                     color="grey-lighten-5"
-                    />
-                </v-row>
-            </template>
-            
-        </v-img>
+     v-if="itemHW"
+     class="ma-1 mb-3 bg-transparent item-hw"
+    >
+        <!-- Hover thumbnail to get icon -->
+        <v-hover v-slot="{ isHovering, props }">
+            <v-img
+             :id="'itemThumb'+item.id"
+             :src="item.thumbPath"
+             class="bg-transparent"
+             >
+                <template v-slot:placeholder>
+                    <v-row 
+                     class="fill-height ma-0"
+                     justify="center"
+                    >
+                        <v-progress-circular 
+                         indeterminate
+                         color="grey-lighten-5"
+                        />
+                    </v-row>
+                </template>
+            </v-img>
+            <v-overlay
+             :model-value="isHovering"
+             class="align-center justify-center"
+             contained
+            >
+                <!-- Image -->
+                <v-btn
+                 v-if="item.mediaType === MediaType.Image"
+                 icon="mdi-magnify-plus-outline"
+                />
+                <!-- Video -->
+                <v-btn
+                 v-else
+                 icon="mdi-magnify-plus-outline"
+                />
+            </v-overlay>
+        </v-hover>
         <v-sheet class="text-center bg-transparent">
             <v-hover>
                 <template v-slot:default="{ isHovering, props }">

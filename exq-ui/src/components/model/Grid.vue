@@ -9,9 +9,11 @@ import { reactive } from 'vue';
 interface Props {
     modelId: number 
     group: GridGroup
+    groupIndex: number
 }
-defineProps<Props>()
+const props = defineProps<Props>()
 
+const itemStore = useItemStore()
 const buttonSet = new Set<ItemButton>()
 buttonSet.add(ItemButton.Pos)
 buttonSet.add(ItemButton.Neg)
@@ -19,7 +21,9 @@ buttonSet.add(ItemButton.Ignore)
 buttonSet.add(ItemButton.Sub)
 const buttons : ItemButtons = { buttons: buttonSet }
 
-defineEmits(['change'])
+defineEmits<{
+    (event: 'change', id:number, grid:number): void
+}>()
 
 // TODO: Add to settings... Toggle for always update model or only when pressing update
 </script>
@@ -31,6 +35,7 @@ defineEmits(['change'])
     >
         <v-col 
          v-for="i in group.items"
+         :key="i"
          cols="3"
          >
             <item 
@@ -38,7 +43,7 @@ defineEmits(['change'])
              :item-id="i"
              :model-id="modelId"
              :provided="false"
-             @change="$emit('change')"
+             @change="$emit('change', i, group.id)"
             />
         </v-col>
     </v-row>

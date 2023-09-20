@@ -75,32 +75,41 @@ export const useModelStore = defineStore('model', () => {
         models[indx].name = newName
     }
     
-    async function getSuggestions(id: number, req: ExqSuggestRequest) {
+    async function getSuggestions(req: ExqSuggestRequest, gridId: number, itemId?: number) {
         let suggs = await doURF(req)
-        let model = models.filter(e => e.id === id)[0]
-        if (suggs.suggestions.length != req.n) {
-            model.grid[0].items.splice(req.n, model.grid[0].items.length)
-            for (let i = 0; i < suggs.suggestions.length; i++) {
-                model.grid[0].items.push(suggs.suggestions[i]);
+        let model = models.filter(e => e.id === req.model)[0]
+        if (req.n == model.grid[gridId].itemsToShow) {
+            if (suggs.suggestions.length != req.n) {
+                model.grid[gridId].items.splice(req.n, model.grid[0].items.length)
+                for (let i = 0; i < suggs.suggestions.length; i++) {
+                    model.grid[0].items.push(suggs.suggestions[i]);
+                }
             }
-        }
-        if (model.grid[0].items.length == req.n) {
-            for (let i = 0; i < req.n; i++) {
-                model.grid[0].items[i] = suggs.suggestions[i];
+            if (model.grid[gridId].items.length == req.n) {
+                for (let i = 0; i < req.n; i++) {
+                    model.grid[gridId].items[i] = suggs.suggestions[i];
+                }
+            } else if (model.grid[gridId].items.length < req.n) {
+                for (let i = 0; i < model.grid[gridId].items.length; i++) {
+                    model.grid[gridId].items[i] = suggs.suggestions[i];
+                }
+                for (let i = model.grid[gridId].items.length; i < req.n; i++) {
+                    model.grid[gridId].items.push(suggs.suggestions[i]);
+                }
+            } else {
+                let diff = model.grid[gridId].items.length - req.n
+                for (let i = model.grid[gridId].items.length; i < req.n; i++) {
+                    model.grid[gridId].items.push(suggs.suggestions[i]);
+                }
+                model.grid[gridId].items.splice(req.n, diff)
             }
-        } else if (model.grid[0].items.length < req.n) {
-            for (let i = 0; i < model.grid[0].items.length; i++) {
-                model.grid[0].items[i] = suggs.suggestions[i];
-            }
-            for (let i = model.grid[0].items.length; i < req.n; i++) {
-                model.grid[0].items.push(suggs.suggestions[i]);
-            }
-        } else {
-            let diff = model.grid[0].items.length - req.n
-            for (let i = model.grid[0].items.length; i < req.n; i++) {
-                model.grid[0].items.push(suggs.suggestions[i]);
-            }
-            model.grid[0].items.splice(req.n, diff)
+        } else if (req.n == 1 && itemId !== undefined) {
+            console.log('Replace item:', itemId!)
+            let indx = model.grid[gridId].items.indexOf(itemId!)
+            console.log('Replace', model.grid[gridId].items[indx], 'from index:', indx)
+            model.grid[gridId].items[indx] = suggs.suggestions[0]
+            console.log('Suggs:', suggs.suggestions)
+            console.log('Suggs.suggestions[0]:', suggs.suggestions[0])
         }
     }
 
