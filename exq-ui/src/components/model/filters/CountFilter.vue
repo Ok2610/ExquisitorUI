@@ -4,7 +4,7 @@ import { reactive, ref, type Ref } from 'vue';
 interface Props {
     modelId: number,
     name: string
-    items: [string|number][]
+    items: string[] | number[]
     count: [number,number][]
     isMulti: boolean
 }

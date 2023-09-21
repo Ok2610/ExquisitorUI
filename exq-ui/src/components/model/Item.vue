@@ -11,6 +11,7 @@ interface Props {
     item?: MediaItem
     modelId : number
     provided : boolean
+    // itemHW:{maxHeight: string, maxWidth: string} 
 }
 const props = defineProps<Props>()
 
@@ -18,7 +19,7 @@ defineEmits<{
     (event: 'change', id:number): void
 }>()
 
-const itemHW = inject('itemHW')
+const itemHW = inject('itemHW') as {maxHeight: string, maxWidth: string}
 
 const itemStore = useItemStore()
 const item : MediaItem = reactive({id: -1, srcPath:'', thumbPath:''})
@@ -47,7 +48,7 @@ if (!props.provided) {
 
 const isPos = computed(() => itemStore.isItemInPos)
 const isNeg = computed(() => itemStore.isItemInNeg)
-// const isHistory = computed(() => itemStore.isItemInHistory)
+const isHistory = computed(() => itemStore.isItemInHistory)
 const isSubmitted = computed(() => itemStore.isItemInSubmitted)
 
 const snackbar = ref(false)
@@ -118,7 +119,7 @@ function addToSet(itemId: number, ilset: ILSets) {
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.Positives); $emit('change')"
+                     @click="addToSet(item.id, ILSets.Positives)"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
                      :disabled="isPos(item.id, modelId)">
                         <v-icon>
@@ -133,7 +134,7 @@ function addToSet(itemId: number, ilset: ILSets) {
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.Negatives); $emit('change')"
+                     @click="addToSet(item.id, ILSets.Negatives)"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
                      :disabled="isNeg(item.id, modelId)">
                         <v-icon>
@@ -148,8 +149,8 @@ function addToSet(itemId: number, ilset: ILSets) {
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.History)"
-                     :color="isHovering ? 'grey' : 'black'">
+                     @click="addToSet(item.id, ILSets.History); $emit('change')"
+                     :color="isHovering || isHistory(item.id, modelId) ? 'grey' : 'black'">
                         <v-icon>
                             mdi-eye-remove-outline                           
                         </v-icon>

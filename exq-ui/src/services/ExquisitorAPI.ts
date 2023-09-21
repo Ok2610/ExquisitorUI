@@ -6,7 +6,9 @@ import type {
     ExqRemoveModelRequest,
     ExqInitModelRequest,
     ExqInitModelResponse,
-ExqGetFiltersResponse
+ExqGetFiltersResponse,
+ExqApplyFiltersRequest,
+ExqResetFilterRequest
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets } from "@/types/mediaitem"
@@ -101,4 +103,28 @@ export const getFilters = async (): Promise<ExqGetFiltersResponse> => {
             'Content-Type': 'application/json',
         }
     }).then(val => val.json())
+}
+
+export const applyFilters = async (req: ExqApplyFiltersRequest): Promise<void> => {
+
+    return await fetch(exqURI+'/applyFilters', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then()
+}
+
+export const resetFilters = async (req: ExqResetFilterRequest): Promise<void> => {
+    return await fetch(exqURI+'/resetFilters', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then()
+
 }

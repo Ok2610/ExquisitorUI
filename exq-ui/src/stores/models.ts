@@ -62,6 +62,10 @@ export const useModelStore = defineStore('model', () => {
         models.push(model)
     }
     
+    function resetModel(model: Model) {
+        
+    }
+    
     function getModel (id: number) : Model {
         return models.filter(e => e.id === id)[0]
     }
@@ -119,6 +123,7 @@ export const useModelStore = defineStore('model', () => {
         deleteModel, 
         initLoadModels, 
         loadModel, 
+        resetModel,
         changeName, 
         getModel, 
         getSuggestions

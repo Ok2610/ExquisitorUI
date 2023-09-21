@@ -26,7 +26,6 @@ function replaceItem(id:number, grid:number) {
     // Get items from cache
     // TODO: Let server have a cache, collect 2 times requested n, 
     // and whenever we need to replace get from cache
-
     let n = 1;
     let pos = itemStore.getSetItems(model.value.id, ILSets.Positives).map((e,_) => e.id)
     let neg = itemStore.getSetItems(model.value.id, ILSets.Negatives).map((e,_) => e.id)
@@ -40,15 +39,21 @@ function updateGrid() {
     updateButton.value = false
     // TODO: Make this getSuggestions for each group
     // Works since there is only one group
+    let gridItems = model.value.grid[0].items.filter((el,_) => !itemStore.isItemInNeg(el, model.value.id) 
+                                                               && !itemStore.isItemInPos(el, model.value.id))
+    itemStore.addItemsToSet(gridItems, model.value.id, ILSets.History)
     let n = model.value.settings.groups[0].itemsToShow;
     let pos = itemStore.getSetItems(model.value.id, ILSets.Positives).map((e,_) => e.id)
     let neg = itemStore.getSetItems(model.value.id, ILSets.Negatives).map((e,_) => e.id)
     let hist = itemStore.getSetItems(model.value.id, ILSets.History).map((e,_) => e.id)
-    hist.push(...model.value.grid[0].items)
     hist.push(...pos)
     hist.push(...neg)
     // TODO: replace hardcoded value
     modelStore.getSuggestions({session: session, model: model.value.id, n: n, pos: pos, neg: neg, seen: hist}, 0)
+}
+
+function resetGrid() {
+    modelStore.resetModel(model.value)
 }
 
 const itemHW = reactive({ maxHeight: (window.innerHeight * 0.25)+'px', maxWidth: (window.innerWidth * 0.3)+'px' })
@@ -86,7 +91,7 @@ provide('itemHW', itemHW)
              class="flexcol"
              variant="plain"
              :style="{backgroundColor: 'black'}"
-             @click="updateGrid"
+             @click="resetGrid"
             >
                 <v-icon>mdi-refresh</v-icon>
                 <span class="text-subtitle-2">CLEAR</span>

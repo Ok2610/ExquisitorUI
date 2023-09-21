@@ -47,3 +47,15 @@ export interface ExqGetItemResponse {
 export interface ExqGetFiltersResponse {
     filters : Filter[]
 }
+
+export interface ExqApplyFiltersRequest {
+    session: string
+    model: number
+    names: string[]
+    values: number[][]
+}
+
+export interface ExqResetFilterRequest {
+    session: string
+    model: number
+}

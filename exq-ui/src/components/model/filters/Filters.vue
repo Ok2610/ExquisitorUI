@@ -15,20 +15,43 @@ const color = props.color
 
 const filterStore = useFilterStore()
 if (!filterStore.filtersLoaded)
-    await filterStore.loadFilters()
+    await filterStore.loadFilters(props.modelId)
 
 const filters = filterStore.filters
-const activeFilters = filterStore.activeFilters
+const activeFilters = reactive(filterStore.activeFilters)
 
 const collections = reactive(new Set<string>())
-filters.forEach((v,_) => { collections.add(v.collectionId) })
+const filterValues: string[][]|number[][] = reactive([])
+let setFilters: number[][] = []
 
-function applyFilters() {
-    
+if (filterStore.filtersLoaded) {
+    filters.forEach((v,_) => { 
+        collections.add(v.collectionId) 
+        setFilters.push(activeFilters.get(props.modelId)![v.id])
+    })
+    console.log(filterValues)
 }
 
-function clearFilters() {
-    
+function updateSetFilters(filterId: number, values: string[]|number[]) {
+    let valIds : number[] = []
+    values.forEach(element => {
+        valIds.push(filters[filterId].values.findIndex((v) => v === element))
+    });
+    setFilters[filterId] = valIds
+    console.log('setFilters', setFilters)
+    console.log('filterValues', filterValues)
+}
+
+async function applyFilters() {
+    await filterStore.addFilters(props.modelId, setFilters)
+}
+
+async function clearFilters() {
+    filterValues.forEach(element => {
+        const len = element.length
+        element.splice(0, len)
+    });
+    await filterStore.clearFilters(props.modelId)
 }
 </script>
 
@@ -37,9 +60,9 @@ function clearFilters() {
      class="pt-3 text-center"
      :color="color"
      >
-        <v-btn size="small" icon="mdi-check"></v-btn>
+        <v-btn size="small" icon="mdi-check" @click="applyFilters"></v-btn>
         <v-divider vertical thickness="10" />
-        <v-btn size="small" icon="mdi-close"></v-btn>
+        <v-btn size="small" icon="mdi-close" @click="clearFilters"></v-btn>
     </v-sheet>
     <template v-for="filter in filters">
         <v-sheet v-if="filter.filter == FilterType.Single"
@@ -47,10 +70,14 @@ function clearFilters() {
          :color="color"
         >
             <v-combobox
+             v-model="filterValues[filter.id][0]"
              clearable
+             auto-select-first
              :label="filter.name"
              :items="filter.values.map((v,_) => v)"
              variant="solo-filled"
+             @update:model-value="console.log(filterValues)"
+             dense
             />
         </v-sheet>        
         <v-sheet v-if="filter.filter == FilterType.Multi"
@@ -58,13 +85,17 @@ function clearFilters() {
          :color="color"
         >
             <v-combobox
+             v-model="filterValues[filter.id]"
              chips
              closable-chips
              clearable
              multiple
+             auto-select-first="exact"
              :label="filter.name"
              :items="filter.values.map((v,_) => v)"
              variant="solo-filled"
+             dense
+             @update:model-value="(vals) => updateSetFilters(filter.id, vals)"
             />
         </v-sheet>        
         <v-sheet v-if="filter.filter == FilterType.NumberRange"

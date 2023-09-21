@@ -53,7 +53,7 @@ const winWidth = { width: window.innerWidth+'px', minWidth: window.innerWidth+'p
 
 // Load filters
 const filterStore = useFilterStore()
-filterStore.loadFilters()
+filterStore.loadFilters(activeModel.value.id)
 
 </script>
 
