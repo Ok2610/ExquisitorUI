@@ -13,6 +13,8 @@ const rail = ref(true)
 const filterToggle = ref(false)
 const searchToggle = ref(false)
 
+const emit = defineEmits(['filterUpdate'])
+
 </script>
 
 <template>
@@ -50,7 +52,7 @@ const searchToggle = ref(false)
      location="left"
      color="indigo-lighten-3"
     >
-        <filters :model-id="modelId" :color="'indigo-lighten-3'"/>
+        <filters :model-id="modelId" :color="'indigo-lighten-3'" @filter-update="$emit('filterUpdate')"/>
     </v-navigation-drawer>
 
     <v-navigation-drawer

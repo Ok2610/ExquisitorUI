@@ -16,7 +16,8 @@ interface Props {
 const props = defineProps<Props>()
 
 defineEmits<{
-    (event: 'change', id:number): void
+    (event: 'change'): void
+    (event: 'replace', id:number): void
 }>()
 
 const itemHW = inject('itemHW') as {maxHeight: string, maxWidth: string}
@@ -119,7 +120,7 @@ function addToSet(itemId: number, ilset: ILSets) {
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.Positives)"
+                     @click="addToSet(item.id, ILSets.Positives); $emit('change')"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
                      :disabled="isPos(item.id, modelId)">
                         <v-icon>
@@ -134,7 +135,7 @@ function addToSet(itemId: number, ilset: ILSets) {
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.Negatives)"
+                     @click="addToSet(item.id, ILSets.Negatives); $emit('change')"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
                      :disabled="isNeg(item.id, modelId)">
                         <v-icon>
@@ -149,7 +150,7 @@ function addToSet(itemId: number, ilset: ILSets) {
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.History); $emit('change')"
+                     @click="addToSet(item.id, ILSets.History); $emit('replace', item.id)"
                      :color="isHovering || isHistory(item.id, modelId) ? 'grey' : 'black'">
                         <v-icon>
                             mdi-eye-remove-outline                           

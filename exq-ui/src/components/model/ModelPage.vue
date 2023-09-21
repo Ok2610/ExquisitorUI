@@ -61,13 +61,14 @@ provide('itemHW', itemHW)
 </script>
 
 <template>
-    <left-panel :model-id="modelId" />
+    <left-panel :model-id="modelId" @filter-update="updateButton = true" />
     <v-container class="d-block">
         <grid v-for="grp in model.grid" 
          :model-id="modelId" 
          :group="grp" 
          :group-index="model.grid.indexOf(grp)"
-         @change="replaceItem"
+         @replace="replaceItem"
+         @change="updateButton = true"
         />
         <v-sheet
          class="bottom-panel mb-5 pa-1"

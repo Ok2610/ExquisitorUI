@@ -11,6 +11,8 @@ interface Props {
 }
 const props = defineProps<Props>()
 
+const emit = defineEmits(['filterUpdate'])
+
 const color = props.color
 
 const filterStore = useFilterStore()
@@ -18,7 +20,6 @@ if (!filterStore.filtersLoaded)
     await filterStore.loadFilters(props.modelId)
 
 const filters = filterStore.filters
-const activeFilters = reactive(filterStore.activeFilters)
 
 const collections = reactive(new Set<string>())
 const filterValues: string[][]|number[][] = reactive([])
@@ -27,7 +28,7 @@ let setFilters: number[][] = []
 if (filterStore.filtersLoaded) {
     filters.forEach((v,_) => { 
         collections.add(v.collectionId) 
-        setFilters.push(activeFilters.get(props.modelId)![v.id])
+        setFilters.push(filterStore.activeFilters.get(props.modelId)![v.id])
     })
     console.log(filterValues)
 }
@@ -38,6 +39,7 @@ function updateSetFilters(filterId: number, values: string[]|number[]) {
         valIds.push(filters[filterId].values.findIndex((v) => v === element))
     });
     setFilters[filterId] = valIds
+    //filterStore.updateNoneActiveFilters(props.modelId, setFilters)
     console.log('setFilters', setFilters)
     console.log('filterValues', filterValues)
 }
@@ -52,6 +54,7 @@ async function clearFilters() {
         element.splice(0, len)
     });
     await filterStore.clearFilters(props.modelId)
+    emit('filterUpdate')
 }
 </script>
 

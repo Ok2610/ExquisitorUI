@@ -20,7 +20,8 @@ buttonSet.add(ItemButton.Sub)
 const buttons : ItemButtons = { buttons: buttonSet }
 
 defineEmits<{
-    (event: 'change', id:number, grid:number): void
+    (event: 'replace', id:number, grid:number): void
+    (event: 'change'): void
 }>()
 
 // TODO: Add to settings... Toggle for always update model or only when pressing update
@@ -42,7 +43,8 @@ defineEmits<{
              :item-id="i"
              :model-id="modelId"
              :provided="false"
-             @change="$emit('change', i, group.id)"
+             @replace="$emit('replace', i, group.id)"
+             @change="$emit('change')"
             />
         </v-col>
     </v-row>

@@ -14,6 +14,9 @@ export const useFilterStore = defineStore('filter', () => {
     const activeFilters : Map<number,number[][]> = 
         reactive(new Map<number, number[][]>())
     
+    // const noneActiveFilters : Map<number,number[][]> = 
+    //     reactive(new Map<number, number[][]>())
+
     async function loadFilters(modelId: number) {
         activeFilters.set(modelId, [])
         await getFilters().then((resp) => { 
@@ -47,5 +50,17 @@ export const useFilterStore = defineStore('filter', () => {
         await resetFilters({session: session, model: modelId})
     }
 
-    return { activeFilters, filters, filtersLoaded, loadFilters, addFilters, clearFilters}
+    // function updateNoneActiveFilters(modelId:number, setFilters:number[][]) {
+    //     noneActiveFilters.set(modelId, setFilters)
+    // }
+
+    return { 
+        activeFilters,
+        filters,
+        filtersLoaded,
+        loadFilters,
+        addFilters,
+        clearFilters,
+        // updateNoneActiveFilters
+    }
 })
