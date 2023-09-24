@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { submitItem } from '@/services/ExquisitorAPI';
 import { useItemStore } from '@/stores/items';
 import type MediaItem from '@/types/mediaitem';
 import { MediaType, type ItemButtons, ItemButton, ILSets } from '@/types/mediaitem';
 import { inject } from 'vue';
 import { computed, reactive, ref } from 'vue';
+import { useSessionStore } from "@/stores/sessions"
+import ItemOverlay from "@/components/model/ItemOverlay.vue"
 
 interface Props {
     buttons : ItemButtons
@@ -61,14 +64,19 @@ function snack(itemId: number, set: string) {
     text.value = 'Item ' + itemId + ' has been added to ' + set
 }
 const { addItemToSet } = itemStore
+const { getSession } = useSessionStore()
 function addToSet(itemId: number, ilset: ILSets) {
     addItemToSet(itemId, props.modelId, ilset)
     if (ilset == ILSets.Positives) snackColor.value = 'success'
     if (ilset == ILSets.Negatives) snackColor.value = 'error'
-    if (ilset == ILSets.Submitted) snackColor.value = 'indigo'
+    if (ilset == ILSets.Submitted) {
+        snackColor.value = 'indigo'
+        submitItem({ session: getSession, model: props.modelId, id: itemId })
+    }
     snack(itemId, ILSets[ilset])
 }
 
+const openOverlay = ref(false)
 
 </script>
 
@@ -82,6 +90,7 @@ function addToSet(itemId: number, ilset: ILSets) {
             <v-img
              :id="'itemThumb'+item.id"
              :src="item.thumbPath"
+             @click="openOverlay = true"
              class="bg-transparent"
              >
                 <template v-slot:placeholder>
@@ -189,10 +198,25 @@ function addToSet(itemId: number, ilset: ILSets) {
                 />
             </template>
         </v-snackbar>
+        <v-overlay 
+         v-model="openOverlay"
+         scroll-strategy="block"
+         class="align-center justify-center my-overlay"
+        >
+            <item-overlay
+             :model-id="modelId"
+             :item="item"
+             :opened="openOverlay"
+            />
+        </v-overlay>
     </v-sheet>
 </template>
 
 <style scoped>
+.my-overlay :deep(.v-overlay__content) {
+    width: 75%;
+    height: 75%;
+}
 .item-hw {
     height: v-bind('itemHW.maxHeight');
 }

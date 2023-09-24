@@ -8,12 +8,14 @@ import type {
     ExqInitModelResponse,
 ExqGetFiltersResponse,
 ExqApplyFiltersRequest,
-ExqResetFilterRequest
+ExqResetFilterRequest,
+ExqSubmissionRequest
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets } from "@/types/mediaitem"
 
 const exqURI = 'http://localhost:5001'
+
 
 // Initialize Exquisitor
 // TODO: Specify collection
@@ -126,5 +128,15 @@ export const resetFilters = async (req: ExqResetFilterRequest): Promise<void> =>
         },
         body: JSON.stringify(req)
     }).then()
+}
 
+export const submitItem = async (req: ExqSubmissionRequest): Promise<void> => {
+    return await fetch(exqURI+'/submit', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then()
 }

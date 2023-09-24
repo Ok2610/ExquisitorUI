@@ -59,3 +59,9 @@ export interface ExqResetFilterRequest {
     session: string
     model: number
 }
+
+export interface ExqSubmissionRequest {
+    session: string
+    model: number
+    id: number
+}

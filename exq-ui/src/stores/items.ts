@@ -1,4 +1,4 @@
-import { ILSets } from "@/types/mediaitem";
+import { ILSets, type Meta} from "@/types/mediaitem";
 import type MediaItem from "@/types/mediaitem";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
@@ -68,6 +68,8 @@ export const useItemStore = defineStore('item', () => {
             case ILSets.History:
                 removeItemFromSet(exqId, modelId, ILSets.Positives)
                 removeItemFromSet(exqId, modelId, ILSets.Negatives)
+                return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
+            case ILSets.Submitted:
                 return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
             default:
                 return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
@@ -139,6 +141,14 @@ export const useItemStore = defineStore('item', () => {
         })
         return setItems
     }
+    
+    function getItemInfo(itemId: number): Meta {
+        return {
+            nameValuePair: [['', ['']]],
+            timelineN: 0,
+            timelineRange: [-1,-1]
+        }
+    }
 
     return {
         items, 
@@ -155,5 +165,6 @@ export const useItemStore = defineStore('item', () => {
         isItemInHistory,
         isItemInSubmitted,
         getSetItems,
+        getItemInfo
     }
 })
