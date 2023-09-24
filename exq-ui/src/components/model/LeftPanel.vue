@@ -52,7 +52,11 @@ const emit = defineEmits(['filterUpdate'])
      location="left"
      color="indigo-lighten-3"
     >
-        <filters :model-id="modelId" :color="'indigo-lighten-3'" @filter-update="$emit('filterUpdate')"/>
+        <filters
+         :model-id="modelId"
+         :color="'indigo-lighten-3'"
+         :opened="filterToggle"
+         @filter-update="$emit('filterUpdate')"/>
     </v-navigation-drawer>
 
     <v-navigation-drawer

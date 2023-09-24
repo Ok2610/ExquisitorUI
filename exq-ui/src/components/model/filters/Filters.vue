@@ -4,10 +4,12 @@ import { FilterType } from '@/types/filter';
 import { reactive } from 'vue';
 import RangeFilter from '@/components/model/filters/RangeFilter.vue'
 import CountFilter from '@/components/model/filters/CountFilter.vue'
+import { getCurrentInstance } from 'vue';
 
 interface Props {
     modelId : number
     color : string
+    opened : boolean
 }
 const props = defineProps<Props>()
 
@@ -22,15 +24,18 @@ if (!filterStore.filtersLoaded)
 const filters = filterStore.filters
 
 const collections = reactive(new Set<string>())
-const filterValues: string[][]|number[][] = reactive([])
+const filterValues: (string | number)[][] = reactive(new Array<string[]|number[]>())
 let setFilters: number[][] = []
 
 if (filterStore.filtersLoaded) {
     filters.forEach((v,_) => { 
         collections.add(v.collectionId) 
         setFilters.push(filterStore.activeFilters.get(props.modelId)![v.id])
+        filterValues.push([])
+        filterValues[v.id] = setFilters[v.id].map((f,_) => v.values[f])
     })
     console.log(filterValues)
+    console.log(setFilters)
 }
 
 function updateSetFilters(filterId: number, values: string[]|number[]) {
@@ -38,6 +43,8 @@ function updateSetFilters(filterId: number, values: string[]|number[]) {
     values.forEach(element => {
         valIds.push(filters[filterId].values.findIndex((v) => v === element))
     });
+    // if (setFilters[filterId].length > valIds.length)
+    //     applyFilters()
     setFilters[filterId] = valIds
     //filterStore.updateNoneActiveFilters(props.modelId, setFilters)
     console.log('setFilters', setFilters)
@@ -46,16 +53,17 @@ function updateSetFilters(filterId: number, values: string[]|number[]) {
 
 async function applyFilters() {
     await filterStore.addFilters(props.modelId, setFilters)
+    emit('filterUpdate')
 }
 
 async function clearFilters() {
-    filterValues.forEach(element => {
-        const len = element.length
-        element.splice(0, len)
+    filters.forEach((element,_) => {
+        filterValues[element.id] = []
     });
     await filterStore.clearFilters(props.modelId)
     emit('filterUpdate')
 }
+
 </script>
 
 <template>
@@ -79,7 +87,7 @@ async function clearFilters() {
              :label="filter.name"
              :items="filter.values.map((v,_) => v)"
              variant="solo-filled"
-             @update:model-value="console.log(filterValues)"
+             @update:model-value="(vals) => updateSetFilters(filter.id, vals)"
              dense
             />
         </v-sheet>        

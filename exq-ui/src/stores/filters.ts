@@ -18,6 +18,7 @@ export const useFilterStore = defineStore('filter', () => {
     //     reactive(new Map<number, number[][]>())
 
     async function loadFilters(modelId: number) {
+        if (filtersLoaded.value) return;
         activeFilters.set(modelId, [])
         await getFilters().then((resp) => { 
             filtersLoaded.value = true
@@ -33,14 +34,15 @@ export const useFilterStore = defineStore('filter', () => {
         let names: string[] = []
         let values: number[][] = []
         filters.forEach(element => {
-            if (filterVals[element.id].length > 0)
-                activeFilters.get(modelId)![element.id] = filterVals[element.id]
-                names.push(element.name.toLowerCase())
-                values.push(filterVals[element.id])
+            console.log('addFilters (loop: filterVals)', filterVals[element.id])
+            filterVals[element.id].forEach((v,i,_) => console.log(v,i))
+            activeFilters.get(modelId)![element.id] = filterVals[element.id]
+            names.push(element.name.toLowerCase())
+            values.push(filterVals[element.id])
         });
-        console.log('filters to add', names, values)
+        console.log('addFilters (filters to add)', names, values)
         const resp = await applyFilters({session: session, model: modelId, names: names, values: values})
-        console.log('addFilters:', resp)
+        console.log('addFilters (response):', resp)
     }
     
     async function clearFilters(modelId: number) {
@@ -54,6 +56,16 @@ export const useFilterStore = defineStore('filter', () => {
     //     noneActiveFilters.set(modelId, setFilters)
     // }
 
+    function getModelFilters(modelId: number) : number[][] {
+        let filterVals : number[][] = []
+        if (activeFilters.has(modelId))
+            if (activeFilters.get(modelId)!.length > 0)
+                filters.forEach(element => {
+                    filterVals.push(activeFilters.get(modelId)![element.id])
+                })
+        return filterVals
+    }
+
     return { 
         activeFilters,
         filters,
@@ -62,5 +74,6 @@ export const useFilterStore = defineStore('filter', () => {
         addFilters,
         clearFilters,
         // updateNoneActiveFilters
+        getModelFilters
     }
 })
