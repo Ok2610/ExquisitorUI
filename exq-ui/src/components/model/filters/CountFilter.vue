@@ -44,6 +44,8 @@ function updateSingleValue(item: [string|number]) {
         <v-card-text v-if="isMulti">
             Multi
             <v-combobox
+             chips
+             multiple
              :items="items.map((e) => e)"
             />
         </v-card-text>

@@ -6,7 +6,9 @@ import type {
     ExqInitModelRequest,
     ExqRemoveModelRequest,
     ExqInitModelResponse,
-ExqGetFiltersResponse
+ExqGetFiltersResponse,
+ExqApplyFiltersRequest,
+ExqResetFilterRequest
 } from "@/types/exq"
 import type { Filter } from "@/types/filter"
 import { FilterProperty, FilterType } from "@/types/filter"
@@ -69,14 +71,9 @@ export const removeModel = async(req: ExqRemoveModelRequest) : Promise<boolean> 
 
 // Get suggestions from the current model
 export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse> => {
-    const resp : ExqGetItemResponse[] = []
+    const resp : number[] = []
     for (var i = 0; i < req.n; i++) {
-        resp.push({ 
-            id: mockItems[i], 
-            mediaId: mockItems[i], 
-            mediaType: MediaType.Image,
-            thumbPath: imgPaths[mockItems[i]], 
-            srcPath: imgPaths[mockItems[i]]}) 
+        resp.push(mockItems[i])
     }
     return { suggestions : resp }
 }
@@ -101,13 +98,13 @@ const mockFilters : Filter[] = [
         collectionId: 'mock',
         name: 'Day',
         values: [
-            [0,'Monday'],
-            [1,'Tuesday'],
-            [2,'Wednesday'],
-            [3,'Thursday'],
-            [4,'Friday'],
-            [5,'Saturday'],
-            [6,'Sunday']
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday'
         ],
         filter: FilterType.Single,
     },
@@ -116,16 +113,16 @@ const mockFilters : Filter[] = [
         collectionId: 'mock',
         name: 'Dominant Color',
         values: [
-            [0,'Red'],
-            [1,'Yellow'],
-            [2,'Blue'],
-            [3,'Green'],
-            [4,'Purple'],
-            [5,'Pink'],
-            [6,'Orange'],
-            [7,'Brown'],
-            [8,'Black'],
-            [9,'White']
+            'Red',
+            'Yellow',
+            'Blue',
+            'Green',
+            'Purple',
+            'Pink',
+            'Orange',
+            'Brown',
+            'Black',
+            'White'
         ],
         filter: FilterType.Single,
         property: FilterProperty.Color
@@ -135,18 +132,18 @@ const mockFilters : Filter[] = [
         collectionId: 'mock',
         name: 'Month',
         values: [
-            [0,'January'],
-            [1,'February'],
-            [2,'March'],
-            [3,'April'],
-            [4,'May'],
-            [5,'June'],
-            [6,'July'],
-            [7,'August'],
-            [8,'September'],
-            [9,'October'],
-            [10,'November'],
-            [11,'December'],
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
         ],
         filter: FilterType.Multi,
     },
@@ -154,7 +151,7 @@ const mockFilters : Filter[] = [
         id: 3,
         collectionId: 'mock',
         name: 'Hour',
-        values: [[0,0],[1,24]],
+        values: [0,24],
         filter: FilterType.NumberRange,
         range: [0,24]
     },
@@ -162,7 +159,7 @@ const mockFilters : Filter[] = [
         id: 4,
         collectionId: 'mock',
         name: 'Hour',
-        values: [[0,0],[1,24]],
+        values: [0,24],
         filter: FilterType.NumberMultiRange,
         range: [0,24]
     },
@@ -171,11 +168,11 @@ const mockFilters : Filter[] = [
         collectionId: 'mock',
         name: 'Objects',
         values: [
-            [0,'apple'],
-            [1,'helmet'],
-            [2,'car'],
-            [3,'skateboard'],
-            [4,'ski'],
+            'apple',
+            'helmet',
+            'car',
+            'skateboard',
+            'ski',
         ],
         filter: FilterType.Count,
         count: [[0,4],[1,3],[2,6],[3,5],[2,4]]
@@ -185,11 +182,11 @@ const mockFilters : Filter[] = [
         collectionId: 'mock',
         name: 'Objects (Multi)',
         values: [
-            [0,'apple'],
-            [1,'helmet'],
-            [2,'car'],
-            [3,'skateboard'],
-            [4,'ski'],
+            'apple',
+            'helmet',
+            'car',
+            'skateboard',
+            'ski',
         ],
         filter: FilterType.MultiCount,
         count: [[0,4],[1,3],[2,6],[3,5],[2,4]]
@@ -199,3 +196,12 @@ const mockFilters : Filter[] = [
 export const getFilters = async (): Promise<ExqGetFiltersResponse> => {
     return { filters: mockFilters }
 }
+
+export const applyFilters = async (req: ExqApplyFiltersRequest): Promise<void> => {
+    return;
+}
+
+export const resetFilters = async (req: ExqResetFilterRequest): Promise<void> => {
+    return;
+}
+

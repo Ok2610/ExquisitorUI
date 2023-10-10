@@ -4,7 +4,6 @@ import type Model from '@/types/model'
 import { ResourceValues, type GridGroup, type Settings } from '@/types/model'
 import type { ExqSuggestRequest } from '@/types/exq'
 import { initModel, removeModel, doURF } from '@/services/ExquisitorAPI'
-// import { initModel, removeModel } from '@/services/MockExquisitorAPI'
 
 export const useModelStore = defineStore('model', () => {
     const nModels = ref(0)

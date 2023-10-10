@@ -109,8 +109,9 @@ function clearSearch() {
         <v-list-item v-for="it in searchResults.items">
             <item 
                 :buttons="buttons" 
-                :item="it"
+                :item-id="it.id"
                 :model-id="modelId"
+                :provided="false"
             />
         </v-list-item>
     </v-list>

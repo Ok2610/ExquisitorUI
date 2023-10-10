@@ -1,10 +1,9 @@
 import type { Filter } from "@/types/filter";
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { applyFilters, getFilters, resetFilters } from "@/services/ExquisitorAPI";
 import { useSessionStore } from "./sessions";
 import type { ExqApplyFiltersRequest } from "@/types/exq";
-// import { getFilters } from "@/services/MockExquisitorAPI";
+import { applyFilters, getFilters, resetFilters } from "@/services/ExquisitorAPI";
 
 export const useFilterStore = defineStore('filter', () => {
     const session = useSessionStore().getSession
