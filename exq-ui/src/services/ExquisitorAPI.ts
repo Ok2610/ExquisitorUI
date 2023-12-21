@@ -9,7 +9,8 @@ import type {
     ExqGetFiltersResponse,
     ExqApplyFiltersRequest,
     ExqResetFilterRequest,
-    ExqSubmissionRequest
+    ExqSubmissionRequest,
+ExqSearchConvRequest
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets } from "@/types/mediaitem"
@@ -148,6 +149,18 @@ export const resetFilters = async (req: ExqResetFilterRequest): Promise<void> =>
 export const submitItem = async (req: ExqSubmissionRequest): Promise<void> => {
     if (mock) return
     return await fetch(exqURI+'/submit', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then()
+}
+
+export const searchConv = async (req: ExqSearchConvRequest): Promise<number[]> => {
+    if (mock) return [10,20,14]
+    return await fetch('', {
         method: 'POST',
         mode: 'cors',
         headers: {

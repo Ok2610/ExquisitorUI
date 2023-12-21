@@ -5,7 +5,7 @@ import type { SearchResults } from '@/types/search';
 import { storeToRefs } from 'pinia';
 import { reactive, ref } from 'vue';
 import Item from '@/components/model/Item.vue';
-import { useItemStore } from '@/stores/items';
+import { searchConv } from '@/services/ExquisitorAPI';
 
 
 interface Props {
@@ -20,7 +20,6 @@ const searchResults : SearchResults = reactive({
 
 const { lastQuery } = storeToRefs(useSearchStore())
 const { updateLastQuery, clearLastQuery } = useSearchStore()
-const { fetchMediaItems } = useItemStore()
 
 if (lastQuery.value.has(props.modelId)) {
     searchResults.query = lastQuery.value.get(props.modelId)!.query
@@ -38,9 +37,7 @@ const loading = ref(false)
 
 async function search() {
     loading.value = true
-    // TODO: Call ExquisitorAPI search and update searchResults
-    const apiResults : number[] = []
-    searchResults.items = await fetchMediaItems(apiResults, props.modelId)
+    searchResults.items = await searchConv({query: searchResults.query})
     updateLastQuery(props.modelId, searchResults)
     setTimeout(() => {
         loading.value = false
@@ -109,7 +106,7 @@ function clearSearch() {
         <v-list-item v-for="it in searchResults.items">
             <item 
                 :buttons="buttons" 
-                :item-id="it.id"
+                :item-id="it"
                 :model-id="modelId"
                 :provided="false"
             />
