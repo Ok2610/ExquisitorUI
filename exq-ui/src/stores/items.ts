@@ -6,7 +6,9 @@ import { getItem } from "@/services/ExquisitorAPI";
 // import { getItem } from "@/services/MockExquisitorAPI";
 
 export const useItemStore = defineStore('item', () => {
+    // K = ItemId, V = MediaItem
     const items : Map<number, MediaItem> = reactive(new Map<number,MediaItem>())
+    // K = modelId, V = Set<ItemId>
     const modelItems : Map<number, Set<number>> = reactive(new Map<number,Set<number>>())
     
     async function fetchMediaItem(exqId: number, modelId: number) : Promise<MediaItem> {
@@ -19,7 +21,7 @@ export const useItemStore = defineStore('item', () => {
 
         if (items.has(exqId)) {
             if (!items.get(exqId)!.currentSets!.has(modelId)) {
-                items.get(exqId)!.currentSets!.set(modelId, new Set<ILSets>())
+                items.get(exqId)!.currentSets!.set(modelId, [false,false,false,false])
             }
             return items.get(exqId)! // '!' Non-null
         } else {
@@ -41,7 +43,7 @@ export const useItemStore = defineStore('item', () => {
             if (items.has(v)) {
                 console.log('Getting ', items.get(v))
                 if (!items.get(v)!.currentSets!.has(modelId)) {
-                    items.get(v)!.currentSets!.set(modelId, new Set<ILSets>())
+                    items.get(v)!.currentSets!.set(modelId, [false,false,false,false])
                 }
                 mediaItems.push(items.get(v)!)
             } else {
@@ -54,32 +56,32 @@ export const useItemStore = defineStore('item', () => {
         return mediaItems
     }
 
-    function addItemToSet(exqId: number, modelId: number, ilset: ILSets) : boolean {
+    function addItemToSet(exqId: number, modelId: number, ilset: ILSets) : void {
         console.log('Adding Item:', exqId, 'to set', ilset, 'for model', modelId)
         switch (ilset) {
             case ILSets.Positives:
-                removeItemFromSet(exqId, modelId, ILSets.Negatives)
-                removeItemFromSet(exqId, modelId, ILSets.History)
-                return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
+                items.get(exqId)!.currentSets!.get(modelId)![ILSets.Negatives] = false
+                items.get(exqId)!.currentSets!.get(modelId)![ILSets.History] = false
+                items.get(exqId)!.currentSets!.get(modelId)![ilset] = true
             case ILSets.Negatives:
-                removeItemFromSet(exqId, modelId, ILSets.Positives)
-                removeItemFromSet(exqId, modelId, ILSets.History)
-                return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
+                items.get(exqId)!.currentSets!.get(modelId)![ILSets.Positives] = false
+                items.get(exqId)!.currentSets!.get(modelId)![ILSets.History] = false
+                items.get(exqId)!.currentSets!.get(modelId)![ilset] = true
             case ILSets.History:
-                removeItemFromSet(exqId, modelId, ILSets.Positives)
-                removeItemFromSet(exqId, modelId, ILSets.Negatives)
-                return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
+                items.get(exqId)!.currentSets!.get(modelId)![ILSets.Positives] = false
+                items.get(exqId)!.currentSets!.get(modelId)![ILSets.Negatives] = false
+                items.get(exqId)!.currentSets!.get(modelId)![ilset] = true
             case ILSets.Submitted:
-                return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
+                items.get(exqId)!.currentSets!.get(modelId)![ilset] = true
             default:
-                return items.get(exqId)!.currentSets!.get(modelId)!.add(ilset) == null
+                items.get(exqId)!.currentSets!.get(modelId)![ilset] = true 
         }
     }
     
     function addItemsToSet(exqIds: number[], modelId: number, ilset: ILSets) : boolean {
         exqIds.forEach((v,_) => {
-            var success = items.get(v)!.currentSets!.get(modelId)!.add(ilset) == null
-            if (!success) {
+            items.get(v)!.currentSets!.get(modelId)![ilset] = true 
+            if (!items.get(v)!.currentSets!.get(modelId)![ilset]) {
                 console.log('Unable to add set to item: ' + ilset + ' ' + v)
                 return false
             }
@@ -87,14 +89,14 @@ export const useItemStore = defineStore('item', () => {
         return true
     }
     
-    function removeItemFromSet(exqId: number, modelId: number, ilset: ILSets) : boolean {
-        return items.get(exqId)!.currentSets!.get(modelId)!.delete(ilset) == null
+    function removeItemFromSet(exqId: number, modelId: number, ilset: ILSets) : void {
+        items.get(exqId)!.currentSets!.get(modelId)![ilset] = false
     }
     
     function removeItemsFromSet(exqIds: number[], modelId: number, ilset: ILSets) : boolean {
         exqIds.forEach((v,_) => {
-            var success = items.get(v)!.currentSets!.get(modelId)!.delete(ilset) == null
-            if (!success) {
+            items.get(v)!.currentSets!.get(modelId)![ilset] = false
+            if (items.get(v)!.currentSets!.get(modelId)![ilset]) {
                 console.log('Unable to delete set from item: ' + ilset + ' ' + v)
                 return false
             }
@@ -108,26 +110,26 @@ export const useItemStore = defineStore('item', () => {
     
     function isItemInPos(exqId: number, modelId: number) : boolean {
         if (!items.has(exqId)) return false
-        if (items.get(exqId)!.currentSets!.get(modelId)?.has(ILSets.Positives)) return true
-        return false
+        if (!items.get(exqId)!.currentSets!.has(modelId)) return false
+        return items.get(exqId)!.currentSets!.get(modelId)![ILSets.Positives]
     }
 
     function isItemInNeg(exqId: number, modelId: number) : boolean {
         if (!items.has(exqId)) return false
-        if (items.get(exqId)!.currentSets!.get(modelId)?.has(ILSets.Negatives)) return true
-        return false
+        if (!items.get(exqId)!.currentSets!.has(modelId)) return false
+        return items.get(exqId)!.currentSets!.get(modelId)![ILSets.Negatives]
     }
 
     function isItemInSubmitted(exqId: number, modelId: number) : boolean {
         if (!items.has(exqId)) return false
-        if (items.get(exqId)!.currentSets!.get(modelId)?.has(ILSets.Submitted)) return true
-        return false
+        if (!items.get(exqId)!.currentSets!.has(modelId)) return false
+        return items.get(exqId)!.currentSets!.get(modelId)![ILSets.Submitted]
     }
 
     function isItemInHistory(exqId: number, modelId: number) : boolean {
         if (!items.has(exqId)) return false
-        if (items.get(exqId)!.currentSets!.get(modelId)?.has(ILSets.History)) return true
-        return false
+        if (!items.get(exqId)!.currentSets!.has(modelId)) return false
+        return items.get(exqId)!.currentSets!.get(modelId)![ILSets.History]
     }
 
     function getSetItems(modelId: number, set: ILSets) : MediaItem[] {
@@ -135,8 +137,7 @@ export const useItemStore = defineStore('item', () => {
         // Get all items for the current model
         let mItems = modelItems.get(modelId)
         mItems?.forEach((value, _) => {
-            // Check if item is in the positive set
-            if (items.get(value)!.currentSets!.get(modelId)!.has(set))
+            if (items.get(value)!.currentSets!.get(modelId)![set])
                 setItems.push(items.get(value)!)
         })
         return setItems

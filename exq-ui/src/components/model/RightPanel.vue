@@ -27,7 +27,7 @@ negButtonSet.add(ItemButton.Sub)
 const negButtons : ItemButtons = { buttons: negButtonSet }
 
 const histButtonSet = new Set<ItemButton>()
-negButtonSet.add(ItemButton.Pos)
+histButtonSet.add(ItemButton.Pos)
 histButtonSet.add(ItemButton.Neg)
 histButtonSet.add(ItemButton.Sub)
 const histButtons : ItemButtons = { buttons: histButtonSet }

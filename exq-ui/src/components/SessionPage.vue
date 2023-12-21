@@ -12,6 +12,7 @@ import ModelPage from '@/components/model/ModelPage.vue'
 import DeleteDialog from '@/components/general/DeleteDialog.vue'
 import SettingsForm from './model/SettingsForm.vue';
 import { useFilterStore } from '@/stores/filters';
+import { useItemStore } from '@/stores/items';
 
 // interface Props { }
 // defineProps<Props>()
@@ -43,6 +44,7 @@ async function deleteModel(model: Model) {
         let index = models.value.findIndex(e => e.id === model.id)
         activeModel.value = models.value[index-1]
     }
+    useItemStore().removeModelFromItems(model.id)
     await modelStore.deleteModel(exqSession.session, model)
 } 
 

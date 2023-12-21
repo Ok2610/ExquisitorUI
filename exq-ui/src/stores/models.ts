@@ -61,8 +61,15 @@ export const useModelStore = defineStore('model', () => {
         models.push(model)
     }
     
-    function resetModel(model: Model) {
-        
+    async function resetModel(model: Model) {
+        const idx : number = models.findIndex(e => e.id === model.id)
+        const groups = await initModel({ modelId: model.id, session: model.session, groups: model.settings.groups })
+        models[idx].grid = groups.groups
+        models[idx].positives = []
+        models[idx].negatives = []
+        models[idx].history = []
+        models[idx].activeFilters?.clear()
+        models[idx].activeSearch = []
     }
     
     function getModel (id: number) : Model {
@@ -79,20 +86,25 @@ export const useModelStore = defineStore('model', () => {
     }
     
     async function getSuggestions(req: ExqSuggestRequest, gridId: number, itemId?: number) {
-        let suggs = await doURF(req)
-        let model = models.filter(e => e.id === req.model)[0]
-        if (req.n == model.grid[gridId].itemsToShow) {
+        let suggs = await doURF(req) // Call Exquisitor
+        let model = models.filter(e => e.id === req.model)[0] // Get model
+        if (req.n == model.grid[gridId].itemsToShow) { // Is it a full update?
+            // Returned items NOT equal to the requested amount
             if (suggs.suggestions.length != req.n) {
-                model.grid[gridId].items.splice(req.n, model.grid[0].items.length)
+                // Remove grid items
+                model.grid[gridId].items.splice(0, model.grid[0].items.length) 
+                // Add suggestions to grid
                 for (let i = 0; i < suggs.suggestions.length; i++) {
-                    model.grid[0].items.push(suggs.suggestions[i]);
+                    model.grid[gridId].items.push(suggs.suggestions[i]);
                 }
             }
-            if (model.grid[gridId].items.length == req.n) {
+            // Returned items equal to the requested amount
+            if (suggs.suggestions.length == req.n) {
+                // Replace grid items with suggestions
                 for (let i = 0; i < req.n; i++) {
                     model.grid[gridId].items[i] = suggs.suggestions[i];
                 }
-            } else if (model.grid[gridId].items.length < req.n) {
+            } /*else if (model.grid[gridId].items.length < req.n) { // lower than requested
                 for (let i = 0; i < model.grid[gridId].items.length; i++) {
                     model.grid[gridId].items[i] = suggs.suggestions[i];
                 }
@@ -105,7 +117,7 @@ export const useModelStore = defineStore('model', () => {
                     model.grid[gridId].items.push(suggs.suggestions[i]);
                 }
                 model.grid[gridId].items.splice(req.n, diff)
-            }
+            }*/
         } else if (req.n == 1 && itemId !== undefined) {
             console.log('Replace item:', itemId!)
             let indx = model.grid[gridId].items.indexOf(itemId!)

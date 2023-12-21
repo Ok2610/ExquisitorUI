@@ -53,6 +53,8 @@ function updateGrid() {
 }
 
 function resetGrid() {
+    itemStore.removeModelFromItems(model.value.id)
+    itemStore.modelItems.get(model.value.id)?.clear()
     modelStore.resetModel(model.value)
 }
 

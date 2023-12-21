@@ -33,7 +33,7 @@ export default interface Model {
     positives? : number[], //TODO: Consider using Item[] here instead
     negatives? : number[], //TODO: Consider using Item[] here instead
     history? : number[], //TODO: Consider using Item[] here instead
-    activeFilters? : any, //TODO: Change to array of Filter types
+    activeFilters? : Map<number,number[][]>
     activeSearch? : string[], //TODO: Consider using a Search type with keyword and search form
 }
 
