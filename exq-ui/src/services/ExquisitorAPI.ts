@@ -88,8 +88,8 @@ export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse>
 
 export const getItem = async (exqId: number, modelId: number): Promise<MediaItem> => {
     if (mock) return await mockGetItem(exqId, modelId)
-    const sets = new Map<number,Set<ILSets>>()
-    sets.set(modelId, new Set<ILSets>())
+    const sets = new Map<number,boolean[]>()
+    sets.set(modelId, [false,false,false,false])
     const resp : ExqGetItemResponse = 
         await fetch(exqURI+'/getItem', {
             method: 'POST',
