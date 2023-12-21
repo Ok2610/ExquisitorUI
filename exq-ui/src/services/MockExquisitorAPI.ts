@@ -79,8 +79,8 @@ export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse>
 }
 
 export const getItem = async (exqId: number, modelId: number): Promise<MediaItem> => {
-    const ilsets = new Map<number,Set<ILSets>>()
-    ilsets.set(modelId, new Set<ILSets>())
+    const ilsets = new Map<number,boolean[]>()
+    ilsets.set(modelId, [false,false,false,false])
     return {
         id: exqId, 
         mediaId: exqId, 
