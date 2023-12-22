@@ -19,7 +19,7 @@ interface Props {
 const props = defineProps<Props>()
 
 defineEmits<{
-    (event: 'change'): void
+    (event: 'urfChange'): void
     (event: 'replace', id:number): void
 }>()
 
@@ -129,7 +129,7 @@ const openOverlay = ref(false)
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.Positives); $emit('change')"
+                     @click="addToSet(item.id, ILSets.Positives); $emit('urfChange')"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
                      :disabled="isPos(item.id, modelId)">
                         <v-icon>
@@ -144,7 +144,7 @@ const openOverlay = ref(false)
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
-                     @click="addToSet(item.id, ILSets.Negatives); $emit('change')"
+                     @click="addToSet(item.id, ILSets.Negatives); $emit('urfChange')"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
                      :disabled="isNeg(item.id, modelId)">
                         <v-icon>
@@ -200,7 +200,8 @@ const openOverlay = ref(false)
         </v-snackbar>
         <v-overlay 
          v-model="openOverlay"
-         scroll-strategy="block"
+         location-strategy="connected"
+         scroll-strategy="reposition"
          class="align-center justify-center my-overlay"
         >
             <item-overlay
@@ -214,7 +215,7 @@ const openOverlay = ref(false)
 
 <style scoped>
 .my-overlay :deep(.v-overlay__content) {
-    width: 75%;
+    width: 60%;
     height: 75%;
 }
 .item-hw {

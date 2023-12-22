@@ -11,7 +11,7 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-defineEmits(['closed'])
+defineEmits(['closed', 'switch'])
 
 const showOverlay = props.opened
 
@@ -46,46 +46,72 @@ async function getItemInfo() {
     }
 }
 
+function isLargeImage(image: string) {
+    const img = new Image()
+    img.src = image
+    return img.height > window.innerHeight * 0.6;
+}
+
+const itemInfo = ref(false)
 if (props.opened) getItemInfo()
 </script>
 
 <template>
-    <v-container class="d-flex">
-        <v-sheet class="large-item-source">
+    <v-row>
+        <v-col class="main">
             <!-- Image -->
             <v-img
              v-if="item.mediaType === MediaType.Image"
+             class="large-item-source"
              :id="'itemSrc'+item.id"
              :src="item.srcPath"
-            />
-            <!-- Video -->
-        </v-sheet>
-        <v-card class="item-details">
-            <v-card-text v-for="n in details.nameValuePair">
-                {{ n[0] }}: {{ n[1] }}                    
-            </v-card-text>
-        </v-card>
-    </v-container>
-    <!-- TIMELINE GOES HERE -->
-    <v-row>
-        <v-col v-for="id in itemIds">
-            <item
-             :buttons="buttons" 
-             :item-id="id"
-             :model-id="modelId"
-             :provided="false"
-             @change="$emit('change')"
-            />
+             :style="{ maxHeight : isLargeImage(item.srcPath) ? '60vh' : 'auto'}"
+            >
+                <v-btn 
+                 icon="mdi-information-outline"
+                 color="yellow"
+                 class="info-btn"
+                 @click="itemInfo = !itemInfo"
+                />
+            </v-img>
         </v-col>
+    
+        <!-- Video -->
+
+        <v-col v-if="itemInfo" cols="4">
+            <v-card class="item-details">
+                <v-card-text v-for="n in details.nameValuePair">
+                    {{ n[0] }}: {{ n[1] }}                    
+                </v-card-text>
+            </v-card>
+        </v-col> 
     </v-row>
+    <v-container>
+        <!-- TIMELINE GOES HERE -->
+        <v-row>
+            <v-col v-for="id in itemIds">
+                <item
+                :buttons="buttons" 
+                :item-id="id"
+                :model-id="modelId"
+                :provided="false"
+                @click="$emit('switch')"
+                />
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <style scoped>
 .large-item-source {
-    width: 75%;
+    text-align: end;
+}
+.info-btn {
+    margin-top: 1%;
+    margin-right: 1%;
+    position: relative;
 }
 .item-details {
     background-color: azure;
-    width: 25%;
 }
 </style>

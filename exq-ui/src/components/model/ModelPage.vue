@@ -70,7 +70,7 @@ provide('itemHW', itemHW)
          :group="grp" 
          :group-index="model.grid.indexOf(grp)"
          @replace="replaceItem"
-         @change="updateButton = true"
+         @urf-change="updateButton = true"
         />
         <v-sheet
          class="bottom-panel mb-5 pa-1"
