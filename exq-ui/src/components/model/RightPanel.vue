@@ -104,6 +104,7 @@ const histUpdate = computed(() => getHistory())
                  :item="it"
                  :model-id="modelId"
                  :provided="true"
+                 :overlay="true"
                 />
             </v-list-item>
         </v-list>
@@ -122,6 +123,7 @@ const histUpdate = computed(() => getHistory())
                  :item="it"
                  :model-id="modelId"
                  :provided="true"
+                 :overlay="true"
                 />
             </v-list-item>
         </v-list>
@@ -140,6 +142,7 @@ const histUpdate = computed(() => getHistory())
                  :item="it"
                  :model-id="modelId"
                  :provided="true"
+                 :overlay="true"
                  @change=""
                 />
             </v-list-item>

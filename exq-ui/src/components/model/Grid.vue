@@ -43,6 +43,7 @@ defineEmits<{
              :item-id="i"
              :model-id="modelId"
              :provided="false"
+             :overlay="true"
              @replace="$emit('replace', i, group.id)"
              @change="$emit('change')"
             />

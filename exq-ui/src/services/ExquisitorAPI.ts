@@ -10,10 +10,10 @@ import type {
     ExqApplyFiltersRequest,
     ExqResetFilterRequest,
     ExqSubmissionRequest,
-ExqSearchConvRequest
+    ExqSearchConvRequest
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
-import { MediaType, type ILSets } from "@/types/mediaitem"
+import { MediaType, type ILSets, type ItemInfo, type RelatedItems } from "@/types/mediaitem"
 import {
     initExquisitor as mockInitExq, 
     initModel as mockInitModel,
@@ -168,4 +168,37 @@ export const searchConv = async (req: ExqSearchConvRequest): Promise<number[]> =
         },
         body: JSON.stringify(req)
     }).then()
+}
+
+export const getItemInfo = async (itemId: number): Promise<ItemInfo> => {
+    if (mock) return { infoPair: [['ID',[itemId.toString()]]] }
+    const resp : ItemInfo = 
+        await fetch(exqURI+'/getItemInfo', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ itemId: itemId })
+        }).then(val => val.json())
+    return resp
+}
+
+export const getRelatedItems = async (itemId: number): Promise<RelatedItems> => {
+    if (mock) {
+        return {
+            timelineN: 10,
+            timelineRange: [10,20]
+        }
+    }
+    const resp: RelatedItems =
+        await fetch(exqURI+'/getRelatedItems', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ itemId: itemId })
+        }).then(val => val.json())
+    return resp
 }

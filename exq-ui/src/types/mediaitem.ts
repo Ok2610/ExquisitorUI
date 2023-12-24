@@ -21,8 +21,11 @@ export enum MediaType {
     Video
 }
 
-export interface Meta {
-    nameValuePair: [string, string[]][]
+export interface ItemInfo {
+    infoPair: [string, string[]][]
+}
+
+export interface RelatedItems {
     timelineN: number // Number of items in group
     timelineRange: [number,number] // ExqId start to end of group
 }
@@ -36,5 +39,6 @@ export default interface MediaItem {
     mediaType? : MediaType,
     thumbPath : string, // For Items in Grid and Overlays
     srcPath : string // Enlarged version for Summary View, if downloading and rendering is no problem use this path in thumbPath
-    metadata?: Meta
+    metadata?: ItemInfo
+    relatedItems?: RelatedItems
 }

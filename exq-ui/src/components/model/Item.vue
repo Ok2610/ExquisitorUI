@@ -14,7 +14,7 @@ interface Props {
     item?: MediaItem
     modelId : number
     provided : boolean
-    // itemHW:{maxHeight: string, maxWidth: string} 
+    overlay : boolean
 }
 const props = defineProps<Props>()
 
@@ -198,7 +198,7 @@ const openOverlay = ref(false)
                 />
             </template>
         </v-snackbar>
-        <v-overlay 
+        <v-overlay v-if="overlay" 
          v-model="openOverlay"
          location-strategy="connected"
          scroll-strategy="reposition"
@@ -206,7 +206,7 @@ const openOverlay = ref(false)
         >
             <item-overlay
              :model-id="modelId"
-             :item="item"
+             :srcItem="item"
              :opened="openOverlay"
             />
         </v-overlay>

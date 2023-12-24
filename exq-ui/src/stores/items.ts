@@ -1,8 +1,8 @@
-import { ILSets, type Meta} from "@/types/mediaitem";
+import { ILSets, type ItemInfo, type RelatedItems} from "@/types/mediaitem";
 import type MediaItem from "@/types/mediaitem";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
-import { getItem } from "@/services/ExquisitorAPI";
+import { getItem, getItemInfo, getRelatedItems } from "@/services/ExquisitorAPI";
 // import { getItem } from "@/services/MockExquisitorAPI";
 
 export const useItemStore = defineStore('item', () => {
@@ -143,12 +143,12 @@ export const useItemStore = defineStore('item', () => {
         return setItems
     }
     
-    function getItemInfo(itemId: number): Meta {
-        return {
-            nameValuePair: [['', ['']]],
-            timelineN: 0,
-            timelineRange: [-1,-1]
-        }
+    async function fetchItemInfo(itemId: number): Promise<ItemInfo> {
+        return await getItemInfo(itemId)
+    }
+
+    async function fetchRelatedItems(itemId: number): Promise<RelatedItems> {
+        return await getRelatedItems(itemId)
     }
 
     return {
@@ -166,6 +166,7 @@ export const useItemStore = defineStore('item', () => {
         isItemInHistory,
         isItemInSubmitted,
         getSetItems,
-        getItemInfo
+        fetchItemInfo,
+        fetchRelatedItems
     }
 })

@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import Item from '@/components/model/Item.vue'
+import { getItem } from '@/services/ExquisitorAPI';
 import { useItemStore } from '@/stores/items';
 import type MediaItem from '@/types/mediaitem';
-import { ItemButton, MediaType, type ItemButtons, type Meta } from '@/types/mediaitem';
+import { ItemButton, MediaType } from '@/types/mediaitem';
+import type { ItemButtons, ItemInfo, RelatedItems } from '@/types/mediaitem';
 import { computed, reactive, ref } from 'vue';
 
 interface Props {
     modelId: number
-    item: MediaItem
+    srcItem: MediaItem
     opened: boolean
 }
 const props = defineProps<Props>()
@@ -14,6 +17,7 @@ const props = defineProps<Props>()
 defineEmits(['closed', 'switch'])
 
 const showOverlay = props.opened
+const mainItem = ref(props.srcItem)
 
 const itemStore = useItemStore()
 const isPos = computed(() => itemStore.isItemInPos)
@@ -29,16 +33,20 @@ const buttons : ItemButtons = { buttons: buttonSet }
 
 
 const temp : MediaItem = reactive({id: -1, srcPath:'', thumbPath:''})
-const details: Meta = reactive({
-    nameValuePair: [['', ['']]],
+const details = reactive({
+    infoPair: [['', ['']]],
     timelineN: 0,
     timelineRange: [-1,-1],
 })
 
 const itemIds : number[] = reactive([])
 async function getItemInfo() {
-    const resp = await itemStore.getItemInfo(props.item.id)
-    details.nameValuePair = resp.nameValuePair
+    const resp = await itemStore.fetchItemInfo(mainItem.value.id)
+    details.infoPair = resp.infoPair
+}
+
+async function getRelatedItems() {
+    const resp = await itemStore.fetchRelatedItems(props.srcItem.id)
     details.timelineN = resp.timelineN
     details.timelineRange = resp.timelineRange
     for (let i = details.timelineRange[0]; i < details.timelineRange[1]; i++) {
@@ -52,8 +60,17 @@ function isLargeImage(image: string) {
     return img.height > window.innerHeight * 0.6;
 }
 
+async function switchMain(itemId: number) {
+    const newItem : MediaItem = await getItem(itemId,props.modelId)
+    mainItem.value = newItem
+    getItemInfo()
+}
+
 const itemInfo = ref(false)
-if (props.opened) getItemInfo()
+if (props.opened) {
+    await getItemInfo()
+    await getRelatedItems()
+}
 </script>
 
 <template>
@@ -61,11 +78,11 @@ if (props.opened) getItemInfo()
         <v-col class="main">
             <!-- Image -->
             <v-img
-             v-if="item.mediaType === MediaType.Image"
+             v-if="mainItem.mediaType === MediaType.Image"
              class="large-item-source"
-             :id="'itemSrc'+item.id"
-             :src="item.srcPath"
-             :style="{ maxHeight : isLargeImage(item.srcPath) ? '60vh' : 'auto'}"
+             :id="'itemSrc'+mainItem.id"
+             :src="mainItem.srcPath"
+             :style="{ maxHeight : isLargeImage(mainItem.srcPath) ? '60vh' : 'auto'}"
             >
                 <v-btn 
                  icon="mdi-information-outline"
@@ -74,32 +91,39 @@ if (props.opened) getItemInfo()
                  @click="itemInfo = !itemInfo"
                 />
             </v-img>
+            <!-- Video -->
         </v-col>
-    
-        <!-- Video -->
 
+        <!-- Item Information -->
         <v-col v-if="itemInfo" cols="4">
             <v-card class="item-details">
-                <v-card-text v-for="n in details.nameValuePair">
+                <v-card-text v-for="n in details.infoPair">
                     {{ n[0] }}: {{ n[1] }}                    
                 </v-card-text>
             </v-card>
         </v-col> 
     </v-row>
-    <v-container>
-        <!-- TIMELINE GOES HERE -->
-        <v-row>
-            <v-col v-for="id in itemIds">
+    <!-- TIMELINE -->
+    <v-row>
+        <v-slide-group
+         center-active
+         show-arrows
+        >
+            <v-slide-group-item 
+             v-for="(id,index) in itemIds" :key="index"
+            >
                 <item
-                :buttons="buttons" 
-                :item-id="id"
-                :model-id="modelId"
-                :provided="false"
-                @click="$emit('switch')"
+                 class="timeline-item"
+                 :buttons="buttons" 
+                 :item-id="id"
+                 :model-id="modelId"
+                 :provided="false"
+                 :overlay="false"
+                 @click="switchMain(id)"
                 />
-            </v-col>
-        </v-row>
-    </v-container>
+            </v-slide-group-item>
+        </v-slide-group>
+    </v-row>
 </template>
 
 <style scoped>
@@ -113,5 +137,12 @@ if (props.opened) getItemInfo()
 }
 .item-details {
     background-color: azure;
+}
+.v-slide-group {
+    background-color: black;
+    max-height: 20vh;
+}
+.timeline-item {
+    max-height: 75%;
 }
 </style>
