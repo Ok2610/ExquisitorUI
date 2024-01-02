@@ -5,7 +5,7 @@ import type { SearchResults } from '@/types/search';
 import { storeToRefs } from 'pinia';
 import { reactive, ref } from 'vue';
 import Item from '@/components/model/Item.vue';
-import { searchConv } from '@/services/ExquisitorAPI';
+import { searchClip } from '@/services/ExquisitorAPI';
 
 
 interface Props {
@@ -37,7 +37,7 @@ const loading = ref(false)
 
 async function search() {
     loading.value = true
-    searchResults.items = await searchConv({query: searchResults.query})
+    searchResults.items = await searchClip({query: searchResults.query})
     updateLastQuery(props.modelId, searchResults)
     setTimeout(() => {
         loading.value = false
@@ -109,6 +109,7 @@ function clearSearch() {
                 :item-id="it"
                 :model-id="modelId"
                 :provided="false"
+                :overlay="true"
             />
         </v-list-item>
     </v-list>

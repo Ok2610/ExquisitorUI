@@ -8,6 +8,7 @@ import { useItemStore } from '@/stores/items';
 import { useSessionStore } from '@/stores/sessions';
 import { ILSets } from '@/types/mediaitem';
 import { provide } from 'vue';
+import Chat from './Chat.vue';
 
 interface Props { 
     modelId : number
@@ -64,43 +65,53 @@ provide('itemHW', itemHW)
 
 <template>
     <left-panel :model-id="modelId" @filter-update="updateButton = true" />
-    <v-container class="d-block">
-        <grid v-for="grp in model.grid" 
-         :model-id="modelId" 
-         :group="grp" 
-         :group-index="model.grid.indexOf(grp)"
-         @replace="replaceItem"
-         @urf-change="updateButton = true"
-        />
-        <v-sheet
-         class="bottom-panel mb-5 pa-1"
-         :elevation="24"
-         location="bottom center"
-         color="black"
-         rounded
-        >
-            <v-btn
-             size="x-large"
-             class="flexcol"
-             variant="plain"
-             :style="{backgroundColor: updateButton ? 'chartreuse' : 'black', color: updateButton ? 'black' : ''}"
-             @click="updateGrid"
+
+    <v-row class="fill-height d-flex">
+        <v-col>
+            <chat
+             :model-id="modelId"
+             class="fill-height"
+            />
+        </v-col>
+        <v-col class="d-block">
+            <grid v-for="grp in model.grid" 
+             :model-id="modelId" 
+             :group="grp" 
+             :group-index="model.grid.indexOf(grp)"
+             @replace="replaceItem"
+             @urf-change="updateButton = true"
+            />
+            <v-sheet
+             class="bottom-panel mb-5 pa-1"
+             :elevation="24"
+             location="bottom center"
+             color="black"
+             rounded
             >
-                <v-icon>mdi-autorenew</v-icon>
-                <span class="text-subtitle-2">UPDATE</span>
-            </v-btn>
-            <v-btn
-             size="x-large"
-             class="flexcol"
-             variant="plain"
-             :style="{backgroundColor: 'black'}"
-             @click="resetGrid"
-            >
-                <v-icon>mdi-refresh</v-icon>
-                <span class="text-subtitle-2">CLEAR</span>
-            </v-btn>
-        </v-sheet>
-    </v-container>
+                <v-btn
+                 size="x-large"
+                 class="flexcol"
+                 variant="plain"
+                 :style="{backgroundColor: updateButton ? 'chartreuse' : 'black', color: updateButton ? 'black' : ''}"
+                 @click="updateGrid"
+                >
+                    <v-icon>mdi-autorenew</v-icon>
+                    <span class="text-subtitle-2">UPDATE</span>
+                </v-btn>
+                <v-btn
+                 size="x-large"
+                 class="flexcol"
+                 variant="plain"
+                 :style="{backgroundColor: 'black'}"
+                 @click="resetGrid"
+                >
+                    <v-icon>mdi-refresh</v-icon>
+                    <span class="text-subtitle-2">CLEAR</span>
+                </v-btn>
+            </v-sheet>
+        </v-col>
+    </v-row>
+    
     <right-panel :model-id="modelId" />
 </template>
 
@@ -111,6 +122,5 @@ provide('itemHW', itemHW)
 .bottom-panel {
     position: fixed;
     width: auto;
-    text-align: center;
 }
 </style>

@@ -10,7 +10,7 @@ import type {
     ExqApplyFiltersRequest,
     ExqResetFilterRequest,
     ExqSubmissionRequest,
-    ExqSearchConvRequest
+    ExqSearchRequest
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets, type ItemInfo, type RelatedItems } from "@/types/mediaitem"
@@ -22,6 +22,7 @@ import {
     getItem as mockGetItem,
     getFilters as mockGetFilters,
 } from "@/services/MockExquisitorAPI"
+import type { ChatEntry } from "@/types/chat"
 
 const exqURI = 'http://localhost:5001'
 const mock = true
@@ -158,9 +159,9 @@ export const submitItem = async (req: ExqSubmissionRequest): Promise<void> => {
     }).then()
 }
 
-export const searchConv = async (req: ExqSearchConvRequest): Promise<number[]> => {
+export const searchClip = async (req: ExqSearchRequest): Promise<number[]> => {
     if (mock) return [10,20,14]
-    return await fetch('', {
+    return await fetch(exqURI+'/searchClip', {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -168,6 +169,20 @@ export const searchConv = async (req: ExqSearchConvRequest): Promise<number[]> =
         },
         body: JSON.stringify(req)
     }).then()
+}
+
+export const searchVLM = async (req: ExqSearchRequest): Promise<ChatEntry> => {
+    if (mock && req.query == "teststring") return { userMsg: req.query, vlmResponse: 'textual response' }
+    if (mock) return { userMsg: req.query, vlmResponse: [10,20,14] }
+    const resp: string|number[] = await fetch(exqURI+'/searchVLM', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then(val => val.json())
+    return { userMsg: req.query, vlmResponse: resp }
 }
 
 export const getItemInfo = async (itemId: number): Promise<ItemInfo> => {

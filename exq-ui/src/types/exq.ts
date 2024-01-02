@@ -66,6 +66,6 @@ export interface ExqSubmissionRequest {
     id: number
 }
 
-export interface ExqSearchConvRequest {
+export interface ExqSearchRequest {
     query: string
 }
