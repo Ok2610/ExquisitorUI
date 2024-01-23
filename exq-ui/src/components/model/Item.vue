@@ -37,6 +37,7 @@ async function getMediaItem() {
     item.mediaType = mi.mediaType
     item.srcPath = mi.srcPath
     item.thumbPath = mi.thumbPath
+    item.relatedItems = mi.relatedItems
 }
 if (!props.provided) {
     await getMediaItem()
@@ -48,6 +49,7 @@ if (!props.provided) {
     item.mediaType = props.item!.mediaType
     item.srcPath = props.item!.thumbPath
     item.thumbPath = props.item!.thumbPath
+    item.relatedItems = props.item!.relatedItems
 }
 
 const isPos = computed(() => itemStore.isItemInPos)
@@ -64,14 +66,14 @@ function snack(itemId: number, set: string) {
     text.value = 'Item ' + itemId + ' has been added to ' + set
 }
 const { addItemToSet } = itemStore
-const { getSession } = useSessionStore()
+const { getSession, evalId } = useSessionStore()
 function addToSet(itemId: number, ilset: ILSets) {
     addItemToSet(itemId, props.modelId, ilset)
     if (ilset == ILSets.Positives) snackColor.value = 'success'
     if (ilset == ILSets.Negatives) snackColor.value = 'error'
     if (ilset == ILSets.Submitted) {
         snackColor.value = 'indigo'
-        submitItem({ session: getSession, model: props.modelId, id: itemId })
+        submitItem({ session: getSession, model: props.modelId, id: itemId, evalId: evalId })
     }
     snack(itemId, ILSets[ilset])
 }

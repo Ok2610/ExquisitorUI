@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 export const useSessionStore = defineStore('sessions', () => {
     const session = ref('')
     
+    const evalId = ref('be4f23a6-9064-424b-82d0-9eb5fdd68d1d')
     
     const getSession = computed(() => { return session.value })
 
@@ -14,5 +15,5 @@ export const useSessionStore = defineStore('sessions', () => {
         session.value = s
     }
 
-    return { setSession, getSession, itemHW }
+    return { setSession, getSession, itemHW, evalId}
 })

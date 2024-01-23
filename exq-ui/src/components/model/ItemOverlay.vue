@@ -14,6 +14,8 @@ interface Props {
 }
 const props = defineProps<Props>()
 
+console.log('srcItem: ', props.srcItem)
+
 defineEmits(['closed', 'switch'])
 
 const showOverlay = props.opened
@@ -32,17 +34,28 @@ buttonSet.add(ItemButton.Sub)
 const buttons : ItemButtons = { buttons: buttonSet }
 
 
-const temp : MediaItem = reactive({id: -1, srcPath:'', thumbPath:''})
 const details = reactive({
     infoPair: [['', ['']]],
-    timelineN: 0,
-    timelineRange: [-1,-1],
+    timelineN: mainItem.value.relatedItems!.timelineN,
+    timelineRange: mainItem.value.relatedItems!.timelineRange,
 })
 
 const itemIds : number[] = reactive([])
+for (let i = details.timelineRange[0]; i < details.timelineRange[1]; i++) {
+    itemIds.push(i)
+}
+console.log('timeline items: ', itemIds)
+
 async function getItemInfo() {
-    const resp = await itemStore.fetchItemInfo(mainItem.value.id)
-    details.infoPair = resp.infoPair
+    if (mainItem.value.metadata === undefined) {
+        const resp = await itemStore.fetchItemInfo(props.modelId, mainItem.value.id)
+        itemStore.setItemMetadata(mainItem.value.id, resp)
+        mainItem.value.metadata = resp
+        details.infoPair = resp.infoPair
+    } else {
+        details.infoPair = mainItem.value.metadata!.infoPair
+    }
+    
 }
 
 async function getRelatedItems() {
@@ -69,7 +82,8 @@ async function switchMain(itemId: number) {
 const itemInfo = ref(false)
 if (props.opened) {
     await getItemInfo()
-    await getRelatedItems()
+    if (mainItem.value.relatedItems === undefined)
+        await getRelatedItems()
 }
 </script>
 

@@ -23,9 +23,11 @@ import {
     getFilters as mockGetFilters,
 } from "@/services/MockExquisitorAPI"
 import type { ChatEntry } from "@/types/chat"
+import { useSessionStore } from "@/stores/sessions"
 
-const exqURI = 'http://localhost:5001'
-const mock = true
+// const exqURI = 'http://localhost:5001'
+const exqURI = 'http://bjth.itu.dk:5001'
+const mock = false
 
 
 // Initialize Exquisitor
@@ -101,14 +103,14 @@ export const getItem = async (exqId: number, modelId: number): Promise<MediaItem
             body: JSON.stringify({ itemId: exqId })
         })
         .then(val => val.json())
-
     return { 
         id: resp.id, 
         mediaId: resp.mediaId, 
         currentSets: sets, 
         mediaType: resp.mediaType, 
         thumbPath: resp.thumbPath, 
-        srcPath: resp.srcPath 
+        srcPath: resp.srcPath,
+        relatedItems: resp.relatedItems 
     }
 }
 
@@ -185,7 +187,7 @@ export const searchVLM = async (req: ExqSearchRequest): Promise<ChatEntry> => {
     return { userMsg: req.query, vlmResponse: resp }
 }
 
-export const getItemInfo = async (itemId: number): Promise<ItemInfo> => {
+export const getItemInfo = async (model: number, itemId: number): Promise<ItemInfo> => {
     if (mock) return { infoPair: [['ID',[itemId.toString()]]] }
     const resp : ItemInfo = 
         await fetch(exqURI+'/getItemInfo', {
@@ -194,7 +196,11 @@ export const getItemInfo = async (itemId: number): Promise<ItemInfo> => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ itemId: itemId })
+            body: JSON.stringify({ 
+                session: useSessionStore().getSession,
+                model: model,
+                itemId: itemId
+            })
         }).then(val => val.json())
     return resp
 }

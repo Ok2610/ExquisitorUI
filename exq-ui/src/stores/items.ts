@@ -27,6 +27,7 @@ export const useItemStore = defineStore('item', () => {
         } else {
             const item = await getItem(exqId, modelId)
             items.set(exqId, item)
+            console.log('exqId', items.get(exqId))
             return item
         }
     }
@@ -143,8 +144,12 @@ export const useItemStore = defineStore('item', () => {
         return setItems
     }
     
-    async function fetchItemInfo(itemId: number): Promise<ItemInfo> {
-        return await getItemInfo(itemId)
+    function setItemMetadata(exqId: number, metadata: ItemInfo) {
+        items.get(exqId)!.metadata = metadata
+    }
+
+    async function fetchItemInfo(modelId: number, itemId: number): Promise<ItemInfo> {
+        return await getItemInfo(modelId, itemId)
     }
 
     async function fetchRelatedItems(itemId: number): Promise<RelatedItems> {
@@ -166,6 +171,7 @@ export const useItemStore = defineStore('item', () => {
         isItemInHistory,
         isItemInSubmitted,
         getSetItems,
+        setItemMetadata,
         fetchItemInfo,
         fetchRelatedItems
     }
