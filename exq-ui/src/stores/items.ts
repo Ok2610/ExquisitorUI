@@ -20,11 +20,13 @@ export const useItemStore = defineStore('item', () => {
         }
 
         if (items.has(exqId)) {
+            console.log('Fetching media item ' + exqId + ' from memory')
             if (!items.get(exqId)!.currentSets!.has(modelId)) {
                 items.get(exqId)!.currentSets!.set(modelId, [false,false,false,false])
             }
             return items.get(exqId)! // '!' Non-null
         } else {
+            console.log('Fetching media item ' + exqId + ' from API')
             const item = await getItem(exqId, modelId)
             items.set(exqId, item)
             console.log('exqId', items.get(exqId))
