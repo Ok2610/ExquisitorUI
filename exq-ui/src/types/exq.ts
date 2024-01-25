@@ -68,6 +68,13 @@ export interface ExqSubmissionRequest {
     evalId: string,
 }
 
+export interface ExqTextSubmissionRequest {
+    session: string
+    model: number
+    text: string,
+    evalId: string,
+}
+
 export interface ExqSearchRequest {
     query: string
 }

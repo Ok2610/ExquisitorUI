@@ -10,7 +10,8 @@ import type {
     ExqApplyFiltersRequest,
     ExqResetFilterRequest,
     ExqSubmissionRequest,
-    ExqSearchRequest
+    ExqSearchRequest,
+    ExqTextSubmissionRequest
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets, type ItemInfo, type RelatedItems } from "@/types/mediaitem"
@@ -27,7 +28,7 @@ import { useSessionStore } from "@/stores/sessions"
 
 // const exqURI = 'http://localhost:5001'
 const exqURI = 'http://bjth.itu.dk:5001'
-const mock = false
+const mock = true
 
 
 // Initialize Exquisitor
@@ -152,6 +153,18 @@ export const resetFilters = async (req: ExqResetFilterRequest): Promise<void> =>
 export const submitItem = async (req: ExqSubmissionRequest): Promise<void> => {
     if (mock) return
     return await fetch(exqURI+'/submit', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then()
+}
+
+export const submitText = async (req: ExqTextSubmissionRequest): Promise<void> => {
+    if (mock) return
+    return await fetch(exqURI+'/submitText', {
         method: 'POST',
         mode: 'cors',
         headers: {
