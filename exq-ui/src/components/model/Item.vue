@@ -84,8 +84,7 @@ const openOverlay = ref(false)
 
 <template>
     <v-sheet 
-     v-if="itemHW"
-     class="ma-1 mb-3 bg-transparent item-hw"
+     class="ma-1 mb-3 bg-transparent"
     >
         <!-- Hover thumbnail to get icon -->
         <v-hover v-slot="{ isHovering, props }">
@@ -107,22 +106,6 @@ const openOverlay = ref(false)
                     </v-row>
                 </template>
             </v-img>
-            <v-overlay
-             :model-value="isHovering"
-             class="align-center justify-center"
-             contained
-            >
-                <!-- Image -->
-                <v-btn
-                 v-if="item.mediaType === MediaType.Image"
-                 icon="mdi-magnify-plus-outline"
-                />
-                <!-- Video -->
-                <v-btn
-                 v-else
-                 icon="mdi-magnify-plus-outline"
-                />
-            </v-overlay>
         </v-hover>
         <v-sheet class="text-center bg-transparent">
             <v-hover>
@@ -131,6 +114,7 @@ const openOverlay = ref(false)
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
+                     size="small"
                      @click="addToSet(item.id, ILSets.Positives); $emit('urfChange')"
                      :color="isHovering || isPos(item.id, modelId)? 'green' : 'black'"
                      :disabled="isPos(item.id, modelId)">
@@ -146,6 +130,7 @@ const openOverlay = ref(false)
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
+                     size="small"
                      @click="addToSet(item.id, ILSets.Negatives); $emit('urfChange')"
                      :color="isHovering || isNeg(item.id, modelId) ? 'red' : 'black'"
                      :disabled="isNeg(item.id, modelId)">
@@ -161,6 +146,7 @@ const openOverlay = ref(false)
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
+                     size="small"
                      @click="addToSet(item.id, ILSets.History); $emit('replace', item.id)"
                      :color="isHovering || isHistory(item.id, modelId) ? 'grey' : 'black'">
                         <v-icon>
@@ -175,6 +161,7 @@ const openOverlay = ref(false)
                      v-bind="props"
                      class="rounded-0"
                      variant="flat"
+                     size="small"
                      @click="addToSet(item.id, ILSets.Submitted)"
                      :color="isHovering || isSubmitted(item.id, modelId) ? 'indigo' : 'black'"
                      :disabled="isSubmitted(item.id, modelId)">
@@ -217,11 +204,12 @@ const openOverlay = ref(false)
 
 <style scoped>
 .my-overlay :deep(.v-overlay__content) {
-    width: 60%;
-    height: 75%;
+    width: 70%;
+    height: 60%;
 }
-.item-hw {
-    height: v-bind('itemHW.maxHeight');
+
+.v-img {
+    max-height: 22vh;
 }
 
 .border-lightgrey {

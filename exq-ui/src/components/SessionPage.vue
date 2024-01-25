@@ -106,7 +106,7 @@ filterStore.loadFilters(activeModel.value.id)
                  >
                     <model-page v-if="activeModel.id === m.id" :model-id="m.id"/>
                 </template>
-                <v-footer class="bg-transparent" style="height:5%; z-index: -1;"></v-footer>
+                <!-- <v-footer class="bg-transparent" style="height:5%; z-index: -1;"></v-footer> -->
             </v-main>
         </v-layout>
     </template>

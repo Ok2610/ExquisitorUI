@@ -3,7 +3,7 @@ import { useItemStore } from '@/stores/items'
 import type { GridGroup } from '@/types/model'
 import Item from '@/components/model/Item.vue'
 import { type ItemButtons, ItemButton, ILSets, MediaType } from '@/types/mediaitem';
-import { reactive } from 'vue';
+import { inject, reactive } from 'vue';
 
 interface Props {
     modelId: number 
@@ -23,6 +23,9 @@ defineEmits<{
     (event: 'replace', id:number, grid:number): void
     (event: 'change'): void
 }>()
+
+
+const itemHW = inject('itemHW') as {maxHeight: string, maxWidth: string}
 
 // TODO: Add to settings... Toggle for always update model or only when pressing update
 // const itemHW = reactive({ maxHeight: (window.innerHeight * 0.25)+'px', maxWidth: (window.innerWidth * 0.3)+'px' })
@@ -53,5 +56,9 @@ defineEmits<{
 </template>
 
 <style scoped>
-
+.v-col {
+    max-height: v-bind('itemHW.maxHeight');
+    padding-left: 6px;
+    padding-right: 6px;
+}
 </style>

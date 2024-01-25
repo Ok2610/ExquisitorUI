@@ -9,6 +9,7 @@ import { useSessionStore } from '@/stores/sessions';
 import { ILSets } from '@/types/mediaitem';
 import { provide } from 'vue';
 import Chat from './Chat.vue';
+import { useFilterStore } from '@/stores/filters';
 
 interface Props { 
     modelId : number
@@ -18,9 +19,21 @@ const modelProps = defineProps<Props>()
 const modelStore = useModelStore()
 const model = computed(() => modelStore.getModel(modelProps.modelId))
 const itemStore = useItemStore()
+const filterStore = useFilterStore()
 const session = useSessionStore().getSession
 
 const updateButton = ref(false)
+
+const snackbar = ref(false)
+const snackTimeout = ref(8000)
+const snackColor = ref('white')
+const text = ref('')
+
+function snack() {
+    snackbar.value = true
+    snackColor.value = 'success'
+    text.value = 'Cleared positives/negatives/history sets and deactivated filters. Re-apply filters or clear them in the filter panel.'
+}
 
 function replaceItem(id:number, grid:number) {
     updateButton.value = true
@@ -57,10 +70,13 @@ function resetGrid() {
     itemStore.removeModelFromItems(model.value.id)
     itemStore.modelItems.get(model.value.id)?.clear()
     modelStore.resetModel(model.value)
+    snack()
 }
 
-const itemHW = reactive({ maxHeight: (window.innerHeight * 0.25)+'px', maxWidth: (window.innerWidth * 0.3)+'px' })
+// const itemHW = reactive({ maxHeight: (window.innerHeight * 0.20)+'px', maxWidth: (window.innerWidth * 0.3)+'px' })
+const itemHW = reactive({ maxHeight: '200px', maxWidth: '256px' })
 provide('itemHW', itemHW)
+
 </script>
 
 <template>
@@ -84,7 +100,8 @@ provide('itemHW', itemHW)
             <v-sheet
              class="bottom-panel mb-5 pa-1"
              :elevation="24"
-             location="bottom center"
+             style="left:74%"
+             location="bottom"
              color="black"
              rounded
             >
@@ -113,6 +130,21 @@ provide('itemHW', itemHW)
     </v-row>
     
     <right-panel :model-id="modelId" />
+    <v-snackbar
+        v-model="snackbar"
+        :timeout="snackTimeout"
+        location="bottom right"
+        :color="snackColor"
+    >
+        {{ text }}
+        <template v-slot:actions>
+            <v-btn
+            variant="text"
+            @click="snackbar=false"
+            icon="mdi-close"
+            />
+        </template>
+    </v-snackbar>
 </template>
 
 <style scoped>
@@ -120,7 +152,7 @@ provide('itemHW', itemHW)
     flex-direction: column;
 }
 .bottom-panel {
-    position: fixed;
-    width: auto;
+    position: sticky;
+    width: fit-content;
 }
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useFilterStore } from '@/stores/filters';
 import { FilterType } from '@/types/filter';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import RangeFilter from '@/components/model/filters/RangeFilter.vue'
 import CountFilter from '@/components/model/filters/CountFilter.vue'
 import { getCurrentInstance } from 'vue';
