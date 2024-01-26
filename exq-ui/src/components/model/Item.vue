@@ -61,9 +61,9 @@ const snackbar = ref(false)
 const snackTimeout = ref(4000)
 const snackColor = ref('white')
 const text = ref('')
-function snack(itemId: number, set: string) {
+function snack(item: string, set: string) {
     snackbar.value = true
-    text.value = 'Item ' + itemId + ' has been added to ' + set
+    text.value = 'Item ' + item + ' has been added to ' + set
 }
 const { addItemToSet } = itemStore
 const { getSession, evalId } = useSessionStore()
@@ -75,7 +75,7 @@ function addToSet(itemId: number, ilset: ILSets) {
         snackColor.value = 'indigo'
         submitItem({ session: getSession, model: props.modelId, id: itemId, evalId: evalId })
     }
-    snack(itemId, ILSets[ilset])
+    snack(itemStore.items.get(itemId)!.name!, ILSets[ilset])
 }
 
 const openOverlay = ref(false)
@@ -175,7 +175,7 @@ const openOverlay = ref(false)
         <v-snackbar
          v-model="snackbar"
          :timeout="snackTimeout"
-         location="bottom right"
+         location="bottom left"
          :color="snackColor"
         >
             {{ text }}
