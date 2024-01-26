@@ -133,7 +133,7 @@ provide('itemHW', itemHW)
     <v-snackbar
         v-model="snackbar"
         :timeout="snackTimeout"
-        location="bottom right"
+        location="bottom left"
         :color="snackColor"
     >
         {{ text }}
