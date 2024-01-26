@@ -28,7 +28,7 @@ import { useSessionStore } from "@/stores/sessions"
 
 // const exqURI = 'http://localhost:5001'
 const exqURI = 'http://bjth.itu.dk:5001'
-const mock = true
+const mock = false
 
 
 // Initialize Exquisitor
@@ -106,6 +106,7 @@ export const getItem = async (exqId: number, modelId: number): Promise<MediaItem
         .then(val => val.json())
     return { 
         id: resp.id, 
+        name: resp.name,
         mediaId: resp.mediaId, 
         currentSets: sets, 
         mediaType: resp.mediaType, 
