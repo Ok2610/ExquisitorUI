@@ -38,6 +38,7 @@ export interface ExqSuggestResponse {
 
 export interface ExqGetItemResponse {
     id: number
+    name: string
     mediaId: number
     mediaType: MediaType
     thumbPath: string
