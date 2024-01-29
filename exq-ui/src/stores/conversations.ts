@@ -1,15 +1,15 @@
-import type { ChatEntry } from "@/types/chat";
+import type { ChatEntryQueryPos, ChatEntryQueryText } from "@/types/chat";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 
 export const useConversationStore = defineStore('conversations', () => {
-    const conversations : Map<number,ChatEntry[]> = reactive(new Map<number,ChatEntry[]>)
+    const conversations : Map<number, (ChatEntryQueryText|ChatEntryQueryPos)[]> = reactive(new Map<number, (ChatEntryQueryText|ChatEntryQueryPos)[]>)
 
     function createConversation(modelId: number) : void {
         conversations.set(modelId,[])
     }
 
-    function getConversation(modelId: number) : ChatEntry[] {
+    function getConversation(modelId: number) : (ChatEntryQueryText|ChatEntryQueryPos)[] {
         if (conversations.has(modelId)) {
             return conversations.get(modelId)!
         } else {
@@ -17,7 +17,7 @@ export const useConversationStore = defineStore('conversations', () => {
         }
     }
 
-    function addConversation(modelId: number, entry: ChatEntry) {
+    function addConversation(modelId: number, entry: ChatEntryQueryText|ChatEntryQueryPos) {
         conversations.get(modelId)!.push(entry)
     }
 

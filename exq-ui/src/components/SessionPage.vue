@@ -2,7 +2,7 @@
 import { ref, reactive, computed, watch } from 'vue';
 
 // import { initExquisitor } from '@/services/MockExquisitorAPI'
-import { initExquisitor } from '@/services/ExquisitorAPI'
+import { initExquisitor, searchVLM } from '@/services/ExquisitorAPI'
 import { useSessionStore } from '@/stores/sessions';
 import { useModelStore } from '@/stores/models';
 

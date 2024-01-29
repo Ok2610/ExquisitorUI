@@ -11,7 +11,13 @@ import type {
     ExqResetFilterRequest,
     ExqSubmissionRequest,
     ExqSearchRequest,
-    ExqTextSubmissionRequest
+    ExqTextSubmissionRequest,
+    ExqQueryRewriteRequest,
+    ExqExcludeVideoRequest,
+    ExqClearExcludedVideoRequest,
+    ExqGetExcludedVideosRequest,
+    ExqGetExcludedVideosResponse,
+    ExqExcludeVideoResponse
 } from "@/types/exq"
 import type MediaItem from "@/types/mediaitem"
 import { MediaType, type ILSets, type ItemInfo, type RelatedItems } from "@/types/mediaitem"
@@ -23,12 +29,12 @@ import {
     getItem as mockGetItem,
     getFilters as mockGetFilters,
 } from "@/services/MockExquisitorAPI"
-import type { ChatEntry } from "@/types/chat"
+import type { ChatEntryQueryText, ChatEntryQueryPos } from "@/types/chat"
 import { useSessionStore } from "@/stores/sessions"
 
-// const exqURI = 'http://localhost:5001'
-const exqURI = 'http://bjth.itu.dk:5001'
-const mock = false
+const exqURI = 'http://localhost:5005'
+// const exqURI = 'http://bjth.itu.dk:5001'
+const mock = false 
 
 
 // Initialize Exquisitor
@@ -139,6 +145,56 @@ export const applyFilters = async (req: ExqApplyFiltersRequest): Promise<void> =
     }).then()
 }
 
+export const excludeVideo = async (req: ExqExcludeVideoRequest): Promise<void> => {
+    if (mock) return
+    return await fetch(exqURI+'/excludeVideo', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then()
+}
+
+export const isVideoExcluded = async (req: ExqExcludeVideoRequest): Promise<boolean> => {
+    if (mock) return false
+    const resp: ExqExcludeVideoResponse = await fetch(exqURI+'/isVideoExcluded', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then(val => val.json())
+    return resp.excludedOrNot
+}
+
+// Remove one or more videos from the excluded list
+export const clearExcludedVideos = async (req: ExqClearExcludedVideoRequest): Promise<void> => {
+    if (mock) return
+    return await fetch(exqURI+'/clearExcludedVideos', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then()
+}
+
+export const getExcludedVideos = async (req: ExqGetExcludedVideosRequest): Promise<ExqGetExcludedVideosResponse> => {
+    if (mock) return {videos: []}
+    return await fetch(exqURI+'/getExcludedVideos', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then(val => val.json())
+}
+
 export const resetFilters = async (req: ExqResetFilterRequest): Promise<void> => {
     if (mock) return
     return await fetch(exqURI+'/resetFilters', {
@@ -187,10 +243,11 @@ export const searchClip = async (req: ExqSearchRequest): Promise<number[]> => {
     }).then()
 }
 
-export const searchVLM = async (req: ExqSearchRequest): Promise<ChatEntry> => {
-    if (mock && req.query == "teststring") return { userMsg: req.query, vlmResponse: 'textual response' }
-    if (mock) return { userMsg: req.query, vlmResponse: [10,20,14] }
-    const resp: string|number[] = await fetch(exqURI+'/searchVLM', {
+export const searchVLM = async (req: ExqSearchRequest): Promise<ChatEntryQueryText> => {
+    if (mock) return { userQuery: req.query, vlmResults: [10,20,14]}
+    // return { userQuery: req.query, vlmResults: [10,20,14,50]}
+    // Calling different server instead of the Exquisitor Server
+    const resp: { results: number[] } = await fetch('http://mandla-1:5001/searchVLM', {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -198,7 +255,40 @@ export const searchVLM = async (req: ExqSearchRequest): Promise<ChatEntry> => {
         },
         body: JSON.stringify(req)
     }).then(val => val.json())
-    return { userMsg: req.query, vlmResponse: resp }
+    console.log(resp)
+    // Logging on Exqusitor server
+    fetch(exqURI+'/searchVLM', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userQuery: req.query, results: resp.results})
+    }).then(val => val.json())
+    return {userQuery: req.query, vlmResults: resp.results}
+}
+
+export const searchQueryRewrite = async (req: ExqQueryRewriteRequest): Promise<ChatEntryQueryPos> => {
+    if (mock) return { userQuery: req.query, positive: req.positive, rewriteSuggestion: 'textual response' }
+    const resp: string = await fetch('http://mandla-1:5001/rewriteQuery', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req)
+    }).then(val => val.json())
+    // Logging on Exqusitor server
+    fetch(exqURI+'/rewriteQueryLog', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({query: req.query, positive: req.positive, caption: resp})
+    }).then(val => val.json())
+
+    return {userQuery: req.query, positive: req.positive, rewriteSuggestion: resp}
 }
 
 export const getItemInfo = async (model: number, itemId: number): Promise<ItemInfo> => {

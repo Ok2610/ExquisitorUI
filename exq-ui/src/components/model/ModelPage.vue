@@ -83,13 +83,13 @@ provide('itemHW', itemHW)
     <left-panel :model-id="modelId" @filter-update="updateButton = true" />
 
     <v-row class="fill-height d-flex">
-        <v-col>
+        <v-col cols="5">
             <chat
              :model-id="modelId"
              class="fill-height"
             />
         </v-col>
-        <v-col class="d-block">
+        <v-col class="d-block mt-5">
             <grid v-for="grp in model.grid" 
              :model-id="modelId" 
              :group="grp" 
@@ -100,7 +100,7 @@ provide('itemHW', itemHW)
             <v-sheet
              class="bottom-panel mb-5 pa-1"
              :elevation="24"
-             style="left:74%"
+             style="left:69%;"
              location="bottom"
              color="black"
              rounded
@@ -152,7 +152,7 @@ provide('itemHW', itemHW)
     flex-direction: column;
 }
 .bottom-panel {
-    position: sticky;
+    position: fixed;
     width: fit-content;
 }
 </style>

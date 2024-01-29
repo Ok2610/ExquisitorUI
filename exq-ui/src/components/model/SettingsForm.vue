@@ -19,9 +19,14 @@ function changeModelName(newName: string) {
 }
 
 const qaAnswer = ref('')
+const sessionStore = useSessionStore()
+
+function changeEvalId(newId: string) {
+    sessionStore.setEvaluationId(newId)
+}
 
 function submitTextAnswerVBS() {
-    const requestObject = {session: useSessionStore().getSession, model: settingsProps.currentModel.id, text: qaAnswer.value, evalId: useSessionStore().evalId}
+    const requestObject = {session: sessionStore.getSession, model: settingsProps.currentModel.id, text: qaAnswer.value, evalId: sessionStore.evalId}
     console.log(requestObject)
     submitText(requestObject)
     snack()
@@ -62,6 +67,18 @@ function snack() {
                  :text="currentModel.name"
                  label="Name"
                  @change="changeModelName"
+                 /> 
+            </v-card-actions>
+        </v-card>
+        <v-card class="bg-indigo text-center ma-2">
+            <v-card-title class="mb-2">
+                Evaluation Id
+            </v-card-title>
+            <v-card-actions>
+                <edit-text-field 
+                 :text="sessionStore.evalId"
+                 label="Name"
+                 @change="changeEvalId"
                  /> 
             </v-card-actions>
         </v-card>

@@ -14,7 +14,7 @@ export const useModelStore = defineStore('model', () => {
             groups: [{
                 id: 0, 
                 name: 'RF', 
-                itemsToShow: 20
+                itemsToShow: 16
             }], 
             resources: ResourceValues.Low 
         }

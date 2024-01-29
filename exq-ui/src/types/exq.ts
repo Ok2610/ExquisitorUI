@@ -57,6 +57,31 @@ export interface ExqApplyFiltersRequest {
     values: number[][]
 }
 
+export interface ExqExcludeVideoRequest {
+    session: string
+    model: number
+    itemId: number
+}
+
+export interface ExqExcludeVideoResponse {
+    excludedOrNot: boolean 
+}
+
+export interface ExqClearExcludedVideoRequest {
+    session: string
+    model: number
+    items: number[]
+}
+
+export interface ExqGetExcludedVideosRequest {
+    session: string
+    model: number
+}
+
+export interface ExqGetExcludedVideosResponse {
+    videos: number[]
+}
+
 export interface ExqResetFilterRequest {
     session: string
     model: number
@@ -78,4 +103,9 @@ export interface ExqTextSubmissionRequest {
 
 export interface ExqSearchRequest {
     query: string
+}
+
+export interface ExqQueryRewriteRequest {
+    query: string
+    positive: number
 }

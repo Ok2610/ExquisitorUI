@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import filters from '@/components/model/filters/Filters.vue'
 import search from '@/components/model/search/Search.vue'
+import ExcludedVideos from './filters/ExcludedVideos.vue';
 
 interface Props {
     modelId: number
@@ -12,6 +13,8 @@ const rail = ref(true)
 
 const filterToggle = ref(false)
 const searchToggle = ref(false)
+const excludeToggle = ref(false)
+const excludeForce = ref(0)
 
 const emit = defineEmits(['filterUpdate'])
 
@@ -32,18 +35,24 @@ const emit = defineEmits(['filterUpdate'])
             <v-divider :thickness="30" class="border-opacity-0"></v-divider>
 
             <v-list-item
-             prepend-icon="mdi-magnify"
-             @click="console.log('clicked search'); searchToggle = !searchToggle;"
+             prepend-icon="mdi-filter-remove-outline"
+             @click="console.log('clicked excluded'); excludeToggle = !excludeToggle; excludeForce += 1"
             >
             </v-list-item>
 
-            <v-divider :thickness="30" class="border-opacity-0"></v-divider>
+            <!-- <v-list-item
+             prepend-icon="mdi-magnify"
+             @click="console.log('clicked search'); searchToggle = !searchToggle;"
+            >
+            </v-list-item> -->
+
+            <!-- <v-divider :thickness="30" class="border-opacity-0"></v-divider>
 
             <v-list-item
              prepend-icon="mdi-call-merge"
              @click="console.log('clicked merge')"
             >
-            </v-list-item>
+            </v-list-item> -->
         </v-list>
     </v-navigation-drawer>
     
@@ -60,12 +69,24 @@ const emit = defineEmits(['filterUpdate'])
     </v-navigation-drawer>
 
     <v-navigation-drawer
+     v-if="excludeToggle"
+     location="left"
+     color="orange-lighten-2"
+    >
+        <excluded-videos
+         :model-id="modelId"
+         :force="excludeForce"
+        />
+
+    </v-navigation-drawer>
+
+    <!-- <v-navigation-drawer
      v-if="searchToggle"
      location="left"
      theme="dark"
     >
         <search :model-id="modelId" />
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 </template>
 
 <style scoped>

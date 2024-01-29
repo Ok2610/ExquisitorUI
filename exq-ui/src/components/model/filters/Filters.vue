@@ -29,7 +29,10 @@ let setFilters: number[][] = []
 
 if (filterStore.filtersLoaded) {
     filters.forEach((v,_) => { 
+        console.log(v)
         collections.add(v.collectionId) 
+        console.log(setFilters)
+        console.log(filterStore.activeFilters.get(props.modelId)!)
         setFilters.push(filterStore.activeFilters.get(props.modelId)![v.id])
         filterValues.push([])
         filterValues[v.id] = setFilters[v.id].map((f,_) => v.values[f])

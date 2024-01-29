@@ -105,6 +105,7 @@ const histUpdate = computed(() => getHistory())
                  :model-id="modelId"
                  :provided="true"
                  :overlay="true"
+                 @urf-change="getPositives"
                 />
             </v-list-item>
         </v-list>
@@ -124,6 +125,7 @@ const histUpdate = computed(() => getHistory())
                  :model-id="modelId"
                  :provided="true"
                  :overlay="true"
+                 @urf-change="getNegatives"
                 />
             </v-list-item>
         </v-list>
@@ -143,7 +145,7 @@ const histUpdate = computed(() => getHistory())
                  :model-id="modelId"
                  :provided="true"
                  :overlay="true"
-                 @change=""
+                 @urf-change="getHistory"
                 />
             </v-list-item>
         </v-list>

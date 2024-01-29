@@ -1,6 +1,12 @@
 import type MediaItem from "./mediaitem";
 
-export interface ChatEntry {
-    userMsg: string,
-    vlmResponse: string | number[]
+export interface ChatEntryQueryText {
+    userQuery: string,
+    vlmResults: number[],
+}
+
+export interface ChatEntryQueryPos {
+    userQuery: string,
+    positive: number,
+    rewriteSuggestion: string
 }

@@ -34,6 +34,7 @@ const itemHW = inject('itemHW') as {maxHeight: string, maxWidth: string}
 <template>
     <suspense>
     <v-row 
+     class="mt-5 mr-2"
      variant="outlined" 
     >
         <v-col 

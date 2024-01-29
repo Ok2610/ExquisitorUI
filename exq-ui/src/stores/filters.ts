@@ -17,15 +17,21 @@ export const useFilterStore = defineStore('filter', () => {
     //     reactive(new Map<number, number[][]>())
 
     async function loadFilters(modelId: number) {
-        if (filtersLoaded.value) return;
-        activeFilters.set(modelId, [])
-        await getFilters().then((resp) => { 
-            filtersLoaded.value = true
-            filters.push(...resp.filters)
+        if (filtersLoaded.value) {
+            activeFilters.set(modelId, [])
             filters.forEach(element => {
                 activeFilters.get(modelId)!.push([])
             });
-        })
+        } else {
+            activeFilters.set(modelId, [])
+            await getFilters().then((resp) => { 
+                filtersLoaded.value = true
+                filters.push(...resp.filters)
+                filters.forEach(element => {
+                    activeFilters.get(modelId)!.push([])
+                });
+            })
+        }
         console.log('filters:', filters)
     }
     

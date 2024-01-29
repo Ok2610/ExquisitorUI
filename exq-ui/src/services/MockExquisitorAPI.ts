@@ -13,7 +13,7 @@ ExqResetFilterRequest
 import type { Filter } from "@/types/filter"
 import { FilterProperty, FilterType } from "@/types/filter"
 import type MediaItem from "@/types/mediaitem"
-import { MediaType, type ILSets } from "@/types/mediaitem"
+import { MediaType, type ILSets, type RelatedItems } from "@/types/mediaitem"
 import type { GridGroup } from "@/types/model"
 
 const mockItems : number[] = [0,1,2,3,4,5,6,7,8,9,10,20,50,25,30,95,83,24,13,43,54,23,66,85,73,27,21,32,35,74,98,12,84]
@@ -81,13 +81,16 @@ export const doURF = async (req: ExqSuggestRequest): Promise<ExqSuggestResponse>
 export const getItem = async (exqId: number, modelId: number): Promise<MediaItem> => {
     const ilsets = new Map<number,boolean[]>()
     ilsets.set(modelId, [false,false,false,false])
+    const rel : RelatedItems = {timelineN: 100, timelineRange: [0,99]}
     return {
         id: exqId, 
+        name: 'name-' + exqId,
         mediaId: exqId, 
         currentSets: ilsets, 
         mediaType: MediaType.Image, 
         thumbPath: imgPaths[exqId], 
-        srcPath: imgPaths[exqId] 
+        srcPath: imgPaths[exqId],
+        relatedItems: rel
     }
 }
 
